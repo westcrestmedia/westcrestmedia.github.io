@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Westcrest Media — Premium Video & Motion Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #080808;
+      --bg2: #0d0d0d;
+      --bg3: #111111;
+      --surface: #161616;
+      --border: rgba(255,255,255,0.07);
+      --gold: #c8a96e;
+      --gold2: #e8c98e;
+      --gold-dim: rgba(200,169,110,0.15);
+      --white: #f5f0e8;
+      --white-dim: rgba(245,240,232,0.55);
+      --white-faint: rgba(245,240,232,0.12);
+      --red-accent: #8b2020;
+      --font-display: 'Cormorant Garamond', serif;
+      --font-sans: 'Syne', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--font-sans);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ─── CUSTOM CURSOR ─── */
+    #cursor {
+      position: fixed; top: 0; left: 0; z-index: 9999;
+      pointer-events: none;
+      mix-blend-mode: difference;
+    }
+    #cursor-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--gold);
+      position: absolute; transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.2s, height 0.2s;
+    }
+    #cursor-ring {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid rgba(200,169,110,0.5);
+      position: absolute; transform: translate(-50%, -50%);
+      transition: transform 0.18s cubic-bezier(.25,.46,.45,.94), width 0.3s, height 0.3s, border-color 0.3s;
+    }
+    body.cursor-hover #cursor-dot { width: 12px; height: 12px; }
+    body.cursor-hover #cursor-ring { width: 56px; height: 56px; border-color: var(--gold); }
+
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 1;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+    /* ─── LOADER ─── */
+    #loader {
+      position: fixed; inset: 0; z-index: 8000;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 20px;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    #loader.hidden { opacity: 0; visibility: hidden; }
+    .loader-logo {
+      font-family: var(--font-display);
+      font-size: 2.8rem; letter-spacing: 0.3em;
+      color: var(--white);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    .loader-bar {
+      width: 200px; height: 1px; background: var(--border);
+      position: relative; overflow: hidden;
+    }
+    .loader-bar::after {
+      content: ''; position: absolute; left: -100%; top: 0;
+      width: 100%; height: 100%; background: var(--gold);
+      animation: loadBar 1.8s cubic-bezier(.4,0,.2,1) forwards;
+    }
+    @keyframes loadBar { to { left: 0; } }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 28px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(8,8,8,0.95) 0%, transparent 100%);
+      transition: padding 0.4s;
+    }
+    nav.scrolled { padding: 18px 60px; background: rgba(8,8,8,0.97); border-bottom: 1px solid var(--border); }
+    .nav-logo {
+      font-family: var(--font-display); font-size: 1.4rem;
+      letter-spacing: 0.25em; font-weight: 300;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 40px; list-style: none; align-items: center; }
+    .nav-links a {
+      font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--white-dim); text-decoration: none;
+      transition: color 0.3s; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px; background: var(--gold);
+      transition: width 0.3s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--bg); background: var(--gold);
+      padding: 10px 24px; text-decoration: none;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .nav-cta:hover { background: var(--gold2); transform: translateY(-1px); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 28px; height: 1px; background: var(--white); transition: 0.3s; }
+
+    /* ─── HERO ─── */
+    #hero {
+      height: 100vh; min-height: 700px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(139,32,32,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse 50% 50% at 20% 80%, rgba(200,169,110,0.06) 0%, transparent 50%),
+                  linear-gradient(135deg, #080808 0%, #0d0a0a 50%, #080808 100%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      text-align: center; max-width: 1000px; padding: 0 40px;
+    }
+    .hero-tag {
+      font-family: var(--font-mono); font-size: 0.65rem;
+      letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 32px;
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+      opacity: 0; animation: fadeInUp 0.8s 2.2s ease forwards;
+    }
+    .hero-tag::before, .hero-tag::after {
+      content: ''; width: 40px; height: 1px; background: var(--gold); opacity: 0.4;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 9vw, 9rem);
+      font-weight: 300; line-height: 0.92;
+      letter-spacing: -0.01em;
+      color: var(--white);
+      opacity: 0; animation: fadeInUp 0.9s 2.4s ease forwards;
+    }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-sub {
+      margin-top: 36px;
+      font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--white-dim); line-height: 1.8;
+      opacity: 0; animation: fadeInUp 0.8s 2.6s ease forwards;
+    }
+    .hero-actions {
+      margin-top: 52px; display: flex; gap: 20px;
+      justify-content: center; align-items: center;
+      opacity: 0; animation: fadeInUp 0.8s 2.8s ease forwards;
+    }
+    .btn-primary {
+      padding: 16px 44px; background: var(--gold);
+      color: var(--bg); font-family: var(--font-sans);
+      font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+      text-decoration: none; font-weight: 600;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+    .btn-primary:hover { background: var(--gold2); transform: translateY(-2px); box-shadow: 0 16px 40px rgba(200,169,110,0.25); }
+    .btn-ghost {
+      padding: 15px 40px; border: 1px solid var(--border);
+      color: var(--white-dim); font-size: 0.65rem;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      text-decoration: none;
+      transition: border-color 0.3s, color 0.3s, transform 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+    .hero-scroll {
+      position: absolute; bottom: 40px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      opacity: 0; animation: fadeInUp 0.8s 3.2s ease forwards;
+    }
+    .scroll-line {
+      width: 1px; height: 60px; background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    .scroll-text { font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--white-dim); }
+    @keyframes scrollPulse { 0%,100%{opacity:0.4;} 50%{opacity:1;} }
+
+    /* ─── SECTION BASE ─── */
+    section { position: relative; }
+    .section-header { margin-bottom: 80px; }
+    .section-index {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.3em; color: var(--gold);
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      font-weight: 300; line-height: 1.05;
+      color: var(--white);
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-desc {
+      margin-top: 20px; max-width: 520px;
+      font-size: 0.82rem; line-height: 1.9;
+      color: var(--white-dim); letter-spacing: 0.02em;
+    }
+    .container { max-width: 1260px; margin: 0 auto; padding: 0 60px; }
+    .padded { padding: 120px 0; }
+
+    /* ─── MARQUEE ─── */
+    .marquee-wrap {
+      padding: 28px 0;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      overflow: hidden; background: var(--bg2);
+    }
+    .marquee-track {
+      display: flex; gap: 60px; white-space: nowrap;
+      animation: marquee 22s linear infinite;
+    }
+    .marquee-item {
+      font-family: var(--font-display); font-style: italic;
+      font-size: 1.1rem; color: var(--white-dim); letter-spacing: 0.05em;
+      flex-shrink: 0; display: flex; align-items: center; gap: 60px;
+    }
+    .marquee-item::after { content: '✦'; color: var(--gold); font-style: normal; font-size: 0.6rem; }
+    @keyframes marquee { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+    /* ─── SERVICES ─── */
+    #services { background: var(--bg); }
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+    .service-card {
+      background: var(--surface); padding: 52px 44px;
+      position: relative; overflow: hidden;
+      transition: transform 0.4s cubic-bezier(.25,.46,.45,.94);
+      border: 1px solid var(--border);
+    }
+    .service-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--gold-dim) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .service-card:hover { transform: translateY(-4px); }
+    .service-card:hover::before { opacity: 1; }
+    .service-num {
+      font-family: var(--font-mono); font-size: 0.55rem;
+      letter-spacing: 0.3em; color: var(--gold);
+      margin-bottom: 32px;
+    }
+    .service-icon { font-size: 2rem; margin-bottom: 24px; }
+    .service-name {
+      font-family: var(--font-display); font-size: 1.7rem;
+      font-weight: 300; color: var(--white);
+      margin-bottom: 16px; line-height: 1.2;
+    }
+    .service-desc {
+      font-size: 0.78rem; line-height: 1.85;
+      color: var(--white-dim); margin-bottom: 32px;
+    }
+    .service-link {
+      font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--gold); text-decoration: none;
+      display: flex; align-items: center; gap: 10px;
+      transition: gap 0.3s;
+    }
+    .service-link:hover { gap: 18px; }
+    .service-link::after { content: '→'; }
+
+    /* ─── PORTFOLIO ─── */
+    #portfolio { background: var(--bg2); }
+    .portfolio-filter {
+      display: flex; gap: 4px; margin-bottom: 60px;
+    }
+    .filter-btn {
+      padding: 9px 22px; font-size: 0.6rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--white-dim); cursor: pointer;
+      transition: all 0.3s; font-family: var(--font-sans);
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--gold); color: var(--bg);
+      border-color: var(--gold);
+    }
+    .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .portfolio-item {
+      position: relative; overflow: hidden;
+      aspect-ratio: 16/10; background: var(--surface);
+      cursor: pointer;
+    }
+    .portfolio-thumb {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.6s cubic-bezier(.25,.46,.45,.94);
+    }
+    .portfolio-item:hover .portfolio-thumb { transform: scale(1.07); }
+    .portfolio-thumb-bg {
+      width: 100%; height: 100%;
+      background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.6s cubic-bezier(.25,.46,.45,.94);
+    }
+    .portfolio-item:hover .portfolio-thumb-bg { transform: scale(1.04); }
+    .thumb-inner {
+      width: 100%; height: 100%; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 3rem; opacity: 0.15;
+    }
+    .portfolio-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,8,8,0.95) 0%, transparent 60%);
+      display: flex; flex-direction: column;
+      justify-content: flex-end; padding: 28px;
+      transform: translateY(10px); opacity: 0;
+      transition: all 0.4s cubic-bezier(.25,.46,.45,.94);
+    }
+    .portfolio-item:hover .portfolio-overlay { opacity: 1; transform: translateY(0); }
+    .portfolio-cat { font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .portfolio-name { font-family: var(--font-display); font-size: 1.4rem; font-weight: 300; }
+    .portfolio-play {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px; height: 56px; border-radius: 50%;
+      border: 1px solid rgba(200,169,110,0.5);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.4s, transform 0.4s;
+    }
+    .portfolio-play svg { fill: var(--gold); margin-left: 4px; }
+    .portfolio-item:hover .portfolio-play { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+    .portfolio-item-large { grid-column: span 2; }
+
+    /* ─── SHOP ─── */
+    #shop { background: var(--bg); }
+    .shop-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+    .shop-card {
+      background: var(--surface); border: 1px solid var(--border);
+      overflow: hidden; transition: transform 0.3s;
+      position: relative;
+    }
+    .shop-card:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
+    .shop-img {
+      aspect-ratio: 4/3; background: var(--bg3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem; border-bottom: 1px solid var(--border);
+      overflow: hidden; position: relative;
+    }
+    .shop-img-label {
+      position: absolute; top: 12px; left: 12px;
+      font-size: 0.5rem; letter-spacing: 0.2em; text-transform: uppercase;
+      background: var(--gold); color: var(--bg);
+      padding: 4px 10px; font-weight: 600;
+    }
+    .shop-body { padding: 24px; }
+    .shop-cat { font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .shop-name { font-family: var(--font-display); font-size: 1.2rem; font-weight: 300; margin-bottom: 10px; }
+    .shop-price-row { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; }
+    .shop-price { font-family: var(--font-mono); font-size: 1rem; color: var(--gold); }
+    .shop-price del { color: var(--white-dim); font-size: 0.75rem; margin-right: 6px; }
+    .btn-buy {
+      font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase;
+      background: transparent; border: 1px solid var(--gold);
+      color: var(--gold); padding: 8px 16px; cursor: pointer;
+      font-family: var(--font-sans);
+      transition: background 0.3s, color 0.3s;
+    }
+    .btn-buy:hover { background: var(--gold); color: var(--bg); }
+
+    /* ─── STATS BAND ─── */
+    .stats-band {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 60px 0;
+    }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+    .stat-item {
+      text-align: center; padding: 20px;
+      border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: var(--font-display); font-size: 3.5rem;
+      font-weight: 300; color: var(--gold); line-height: 1;
+    }
+    .stat-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white-dim); margin-top: 8px; }
+
+    /* ─── PROCESS ─── */
+    #process { background: var(--bg2); }
+    .process-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-top: 20px; }
+    .process-step { position: relative; padding-top: 24px; }
+    .process-step::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 100%; height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+    }
+    .process-num {
+      font-family: var(--font-mono); font-size: 0.6rem;
+      letter-spacing: 0.3em; color: var(--gold); margin-bottom: 20px;
+    }
+    .process-name {
+      font-family: var(--font-display); font-size: 1.4rem;
+      font-weight: 300; margin-bottom: 16px;
+    }
+    .process-desc { font-size: 0.78rem; line-height: 1.85; color: var(--white-dim); }
+
+    /* ─── TESTIMONIALS ─── */
+    #testimonials { background: var(--bg); overflow: hidden; }
+    .testimonials-inner { display: flex; gap: 28px; }
+    .testimonial-card {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 44px; flex: 0 0 420px;
+      position: relative; overflow: hidden;
+    }
+    .testimonial-card::before {
+      content: '"'; position: absolute;
+      top: -20px; left: 20px;
+      font-family: var(--font-display); font-size: 10rem;
+      color: var(--gold); opacity: 0.05; line-height: 1;
+      pointer-events: none;
+    }
+    .testimonial-stars { color: var(--gold); font-size: 0.7rem; margin-bottom: 20px; letter-spacing: 3px; }
+    .testimonial-text {
+      font-family: var(--font-display); font-size: 1.05rem;
+      font-style: italic; line-height: 1.75; color: var(--white);
+      margin-bottom: 28px;
+    }
+    .testimonial-author { display: flex; align-items: center; gap: 16px; }
+    .testimonial-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--gold-dim); border: 1px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 1rem;
+      color: var(--gold);
+    }
+    .testimonial-name { font-size: 0.78rem; font-weight: 600; margin-bottom: 2px; }
+    .testimonial-role { font-size: 0.65rem; color: var(--white-dim); letter-spacing: 0.08em; }
+
+    /* ─── CONTACT ─── */
+    #contact {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: start; }
+    .contact-form { display: flex; flex-direction: column; gap: 20px; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    .form-label { font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--white-dim); }
+    .form-input, .form-select, .form-textarea {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--white); font-family: var(--font-sans);
+      font-size: 0.82rem; padding: 14px 18px;
+      outline: none; transition: border-color 0.3s;
+      width: 100%;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
+    .form-select option { background: var(--bg3); }
+    .form-textarea { resize: vertical; min-height: 140px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .contact-info { padding-top: 12px; }
+    .contact-info-title {
+      font-family: var(--font-display); font-size: 2.4rem;
+      font-weight: 300; margin-bottom: 24px; line-height: 1.2;
+    }
+    .contact-info-title em { font-style: italic; color: var(--gold); }
+    .contact-info-desc { font-size: 0.82rem; line-height: 1.9; color: var(--white-dim); margin-bottom: 48px; }
+    .contact-details { display: flex; flex-direction: column; gap: 24px; }
+    .contact-detail-item { display: flex; gap: 20px; align-items: flex-start; }
+    .contact-detail-icon {
+      width: 40px; height: 40px; border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0; color: var(--gold);
+    }
+    .contact-detail-label { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+    .contact-detail-value { font-size: 0.85rem; color: var(--white); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 60px 0 40px;
+    }
+    .footer-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 60px;
+    }
+    .footer-logo {
+      font-family: var(--font-display); font-size: 2rem;
+      letter-spacing: 0.2em; font-weight: 300;
+    }
+    .footer-logo span { color: var(--gold); }
+    .footer-tagline { font-size: 0.72rem; color: var(--white-dim); letter-spacing: 0.08em; margin-top: 6px; }
+    .footer-links-group { display: flex; gap: 80px; }
+    .footer-col h4 { font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-col a { font-size: 0.78rem; color: var(--white-dim); text-decoration: none; transition: color 0.3s; }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 32px; border-top: 1px solid var(--border);
+    }
+    .footer-copy { font-size: 0.65rem; color: var(--white-dim); letter-spacing: 0.08em; }
+    .social-links { display: flex; gap: 16px; }
+    .social-link {
+      width: 36px; height: 36px; border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white-dim); text-decoration: none; font-size: 0.75rem;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .social-link:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ─── REVEAL ANIMATIONS ─── */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ─── MOBILE NAV ─── */
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 500;
+      background: var(--bg); flex-direction: column;
+      align-items: center; justify-content: center; gap: 36px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--font-display); font-size: 2.4rem;
+      font-weight: 300; color: var(--white); text-decoration: none;
+      transition: color 0.3s;
+    }
+    .mobile-menu a:hover { color: var(--gold); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1100px) {
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .shop-grid { grid-template-columns: repeat(2, 1fr); }
+      .portfolio-item-large { grid-column: span 1; }
+      .contact-grid { grid-template-columns: 1fr; gap: 60px; }
+    }
+    @media (max-width: 900px) {
+      nav { padding: 20px 30px; }
+      nav.scrolled { padding: 14px 30px; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .container { padding: 0 30px; }
+      .padded { padding: 80px 0; }
+      .services-grid { grid-template-columns: 1fr; }
+      .shop-grid { grid-template-columns: 1fr; }
+      .portfolio-grid { grid-template-columns: 1fr 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item:nth-child(3) { border-right: 1px solid var(--border); }
+      .process-list { grid-template-columns: repeat(2, 1fr); }
+      .footer-top { flex-direction: column; gap: 40px; }
+      .footer-links-group { gap: 40px; }
+    }
+    @media (max-width: 600px) {
+      .hero-title { font-size: 3.2rem; }
+      .portfolio-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .process-list { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR -->
+  <div id="cursor">
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+  </div>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-logo">WESTCREST</div>
+    <div class="loader-bar"></div>
+  </div>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#services" onclick="closeMobile()">Services</a>
+    <a href="#portfolio" onclick="closeMobile()">Portfolio</a>
+    <a href="#shop" onclick="closeMobile()">Shop</a>
+    <a href="#process" onclick="closeMobile()">Process</a>
+    <a href="#contact" onclick="closeMobile()">Contact</a>
+  </div>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">WESTCREST <span>MEDIA</span></a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#portfolio">Portfolio</a></li>
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Start a Project</a>
+    <div class="hamburger" id="hamburger" onclick="toggleMobile()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-tag">Premium Motion Studio · Est. 2020</div>
+      <h1 class="hero-title">We Craft<br /><em>Visual</em><br />Masterpieces</h1>
+      <p class="hero-sub">Video Editing · Motion Graphics · Cinematic Production<br />Plugins & Project Files for Creators</p>
+      <div class="hero-actions">
+        <a href="#portfolio" class="btn-primary">View Our Work</a>
+        <a href="#contact" class="btn-ghost">Get a Quote</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span class="scroll-text">Scroll</span>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track" id="marqueeTrack">
+      <span class="marquee-item">Video Editing</span>
+      <span class="marquee-item">Motion Graphics</span>
+      <span class="marquee-item">Color Grading</span>
+      <span class="marquee-item">After Effects Plugins</span>
+      <span class="marquee-item">Premiere Presets</span>
+      <span class="marquee-item">Cinematic LUTs</span>
+      <span class="marquee-item">Title Animations</span>
+      <span class="marquee-item">Sound Design</span>
+      <span class="marquee-item">Visual Effects</span>
+      <span class="marquee-item">Project Templates</span>
+      <span class="marquee-item">Video Editing</span>
+      <span class="marquee-item">Motion Graphics</span>
+      <span class="marquee-item">Color Grading</span>
+      <span class="marquee-item">After Effects Plugins</span>
+      <span class="marquee-item">Premiere Presets</span>
+      <span class="marquee-item">Cinematic LUTs</span>
+      <span class="marquee-item">Title Animations</span>
+      <span class="marquee-item">Sound Design</span>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services" class="padded">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-index">01 — Services</div>
+        <h2 class="section-title">What We <em>Create</em></h2>
+        <p class="section-desc">From concept to final cut, we deliver world-class visual content that captivates, converts, and endures.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card reveal reveal-delay-1">
+          <div class="service-num">001</div>
+          <div class="service-icon">🎬</div>
+          <h3 class="service-name">Video Editing</h3>
+          <p class="service-desc">Professional editing for commercials, short films, YouTube channels, social reels, and corporate content. Every cut is deliberate, every moment crafted.</p>
+          <a href="#contact" class="service-link">Enquire Now</a>
+        </div>
+        <div class="service-card reveal reveal-delay-2">
+          <div class="service-num">002</div>
+          <div class="service-icon">✦</div>
+          <h3 class="service-name">Motion Graphics</h3>
+          <p class="service-desc">Animated logos, kinetic typography, explainer animations, and broadcast-ready graphics. We turn your ideas into fluid, breathtaking motion.</p>
+          <a href="#contact" class="service-link">Enquire Now</a>
+        </div>
+        <div class="service-card reveal reveal-delay-3">
+          <div class="service-num">003</div>
+          <div class="service-icon">🎨</div>
+          <h3 class="service-name">Color Grading</h3>
+          <p class="service-desc">Cinematic color grading and LUT creation to give your footage a signature look. DaVinci Resolve specialist with a trained colorist's eye.</p>
+          <a href="#contact" class="service-link">Enquire Now</a>
+        </div>
+        <div class="service-card reveal reveal-delay-1">
+          <div class="service-num">004</div>
+          <div class="service-icon">⚡</div>
+          <h3 class="service-name">After Effects VFX</h3>
+          <p class="service-desc">Visual effects, compositing, and dynamic animations built in After Effects. From subtle enhancements to full cinematic VFX sequences.</p>
+          <a href="#contact" class="service-link">Enquire Now</a>
+        </div>
+        <div class="service-card reveal reveal-delay-2">
+          <div class="service-num">005</div>
+          <div class="service-icon">🔊</div>
+          <h3 class="service-name">Sound Design</h3>
+          <p class="service-desc">Audio mixing, SFX layering, and music synchronization to give your video the emotional depth it deserves. Sound is half the experience.</p>
+          <a href="#contact" class="service-link">Enquire Now</a>
+        </div>
+        <div class="service-card reveal reveal-delay-3">
+          <div class="service-num">006</div>
+          <div class="service-icon">📦</div>
+          <h3 class="service-name">Brand Video Packages</h3>
+          <p class="service-desc">Complete video branding suites including intro/outro animations, lower thirds, overlays, and reusable template kits for your brand identity.</p>
+          <a href="#contact" class="service-link">Enquire Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-band">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item reveal">
+          <div class="stat-num" data-target="350">0</div>
+          <div class="stat-label">Projects Delivered</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-1">
+          <div class="stat-num" data-target="120">0</div>
+          <div class="stat-label">Happy Clients</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-2">
+          <div class="stat-num" data-target="4">0</div>
+          <div class="stat-label">Years of Excellence</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-3">
+          <div class="stat-num" data-target="98">0</div>
+          <div class="stat-label">Client Satisfaction %</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PORTFOLIO -->
+  <section id="portfolio" class="padded">
+    <div class="container">
+      <div class="section-header reveal" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:30px;">
+        <div>
+          <div class="section-index">02 — Portfolio</div>
+          <h2 class="section-title">Featured <em>Work</em></h2>
+        </div>
+        <div class="portfolio-filter">
+          <button class="filter-btn active" onclick="filterPortfolio(this,'all')">All</button>
+          <button class="filter-btn" onclick="filterPortfolio(this,'video')">Video</button>
+          <button class="filter-btn" onclick="filterPortfolio(this,'motion')">Motion</button>
+          <button class="filter-btn" onclick="filterPortfolio(this,'brand')">Brand</button>
+        </div>
+      </div>
+      <div class="portfolio-grid reveal">
+        <div class="portfolio-item portfolio-item-large" data-cat="video">
+          <div class="portfolio-thumb-bg">
+            <div class="thumb-inner" style="background: linear-gradient(135deg,#1a0a0a,#2a1010); font-size:1rem; color:rgba(200,169,110,0.4); letter-spacing:0.1em; font-family:'Cormorant Garamond',serif; font-size:1.6rem;">CINEMATIC REEL 2024</div>
+          </div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Video Edit</div>
+            <div class="portfolio-name">Cinematic Showcase Reel</div>
+          </div>
+          <div class="portfolio-play">
+            <svg width="16" height="18" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+          </div>
+        </div>
+        <div class="portfolio-item" data-cat="motion">
+          <div class="portfolio-thumb-bg" style="background: linear-gradient(135deg,#0a0a1a,#101025);">
+            <div class="thumb-inner" style="color:rgba(100,100,200,0.3); font-family:'Cormorant Garamond',serif; font-size:1.2rem; color:rgba(200,169,110,0.4);">MOTION ✦</div>
+          </div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Motion Graphics</div>
+            <div class="portfolio-name">Brand Reveal Animation</div>
+          </div>
+          <div class="portfolio-play">
+            <svg width="16" height="18" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+          </div>
+        </div>
+        <div class="portfolio-item" data-cat="brand">
+          <div class="portfolio-thumb-bg" style="background: linear-gradient(135deg,#0a1a0a,#101a10);">
+            <div class="thumb-inner" style="color:rgba(200,169,110,0.3); font-family:'Cormorant Garamond',serif; font-size:1.2rem;">BRAND KIT</div>
+          </div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Brand Video</div>
+            <div class="portfolio-name">Luxury Brand Package</div>
+          </div>
+          <div class="portfolio-play">
+            <svg width="16" height="18" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+          </div>
+        </div>
+        <div class="portfolio-item" data-cat="video">
+          <div class="portfolio-thumb-bg" style="background: linear-gradient(135deg,#1a0f0a,#2a1a0a);">
+            <div class="thumb-inner" style="color:rgba(200,169,110,0.3); font-family:'Cormorant Garamond',serif; font-size:1.2rem;">EDITORIAL</div>
+          </div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Short Film</div>
+            <div class="portfolio-name">Editorial Short Film</div>
+          </div>
+          <div class="portfolio-play">
+            <svg width="16" height="18" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+          </div>
+        </div>
+        <div class="portfolio-item portfolio-item-large" data-cat="motion">
+          <div class="portfolio-thumb-bg" style="background: linear-gradient(135deg,#0d0d1a,#1a0d1a);">
+            <div class="thumb-inner" style="color:rgba(200,169,110,0.3); font-family:'Cormorant Garamond',serif; font-size:1.6rem;">VFX SEQUENCE</div>
+          </div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Visual Effects</div>
+            <div class="portfolio-name">Particle VFX Title Sequence</div>
+          </div>
+          <div class="portfolio-play">
+            <svg width="16" height="18" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOP -->
+  <section id="shop" class="padded" style="background: var(--bg2);">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-index">03 — Shop</div>
+        <h2 class="section-title">Plugins &amp; <em>Products</em></h2>
+        <p class="section-desc">Download professional-grade presets, plugins, LUTs, and project files used in real productions. Instant access, lifetime updates.</p>
+      </div>
+      <div class="shop-grid">
+        <div class="shop-card reveal reveal-delay-1">
+          <div class="shop-img">
+            <div style="font-size:3rem">⚡</div>
+            <span class="shop-img-label">Bestseller</span>
+          </div>
+          <div class="shop-body">
+            <div class="shop-cat">After Effects Plugin</div>
+            <div class="shop-name">CinemaFlow AE Pack</div>
+            <p style="font-size:0.72rem; color:var(--white-dim); line-height:1.7; margin-top:8px;">50+ professional transitions, overlays, and animation presets for After Effects.</p>
+            <div class="shop-price-row">
+              <div class="shop-price"><del>$79</del> $49</div>
+              <button class="btn-buy" onclick="addToCart('CinemaFlow AE Pack')">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+        <div class="shop-card reveal reveal-delay-2">
+          <div class="shop-img">
+            <div style="font-size:3rem">🎨</div>
+            <span class="shop-img-label">New</span>
+          </div>
+          <div class="shop-body">
+            <div class="shop-cat">DaVinci LUT Pack</div>
+            <div class="shop-name">Westcrest Cinematic LUTs</div>
+            <p style="font-size:0.72rem; color:var(--white-dim); line-height:1.7; margin-top:8px;">30 handcrafted cinematic LUTs for DaVinci Resolve, Premiere, and FCPX.</p>
+            <div class="shop-price-row">
+              <div class="shop-price">$29</div>
+              <button class="btn-buy" onclick="addToCart('Cinematic LUTs')">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+        <div class="shop-card reveal reveal-delay-3">
+          <div class="shop-img">
+            <div style="font-size:3rem">🎬</div>
+          </div>
+          <div class="shop-body">
+            <div class="shop-cat">Premiere Pro Project</div>
+            <div class="shop-name">Luxury Brand Video Kit</div>
+            <p style="font-size:0.72rem; color:var(--white-dim); line-height:1.7; margin-top:8px;">Complete Premiere Pro project file with editable templates for brand videos.</p>
+            <div class="shop-price-row">
+              <div class="shop-price"><del>$59</del> $39</div>
+              <button class="btn-buy" onclick="addToCart('Brand Video Kit')">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+        <div class="shop-card reveal reveal-delay-4">
+          <div class="shop-img">
+            <div style="font-size:3rem">✦</div>
+            <span class="shop-img-label">Bundle</span>
+          </div>
+          <div class="shop-body">
+            <div class="shop-cat">Full Bundle</div>
+            <div class="shop-name">Creator Pro Bundle</div>
+            <p style="font-size:0.72rem; color:var(--white-dim); line-height:1.7; margin-top:8px;">Everything in one — AE Pack, LUTs, Premiere projects + exclusive bonuses.</p>
+            <div class="shop-price-row">
+              <div class="shop-price"><del>$167</del> $97</div>
+              <button class="btn-buy" onclick="addToCart('Creator Pro Bundle')">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process" class="padded" style="background: var(--bg);">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-index">04 — Process</div>
+        <h2 class="section-title">How We <em>Work</em></h2>
+        <p class="section-desc">A refined, transparent process designed for seamless collaboration and exceptional outcomes every time.</p>
+      </div>
+      <div class="process-list">
+        <div class="process-step reveal reveal-delay-1">
+          <div class="process-num">Step 01</div>
+          <h3 class="process-name">Discovery Call</h3>
+          <p class="process-desc">We begin with a deep-dive consultation to understand your vision, goals, audience, and creative references. No cookie-cutter briefs here.</p>
+        </div>
+        <div class="process-step reveal reveal-delay-2">
+          <div class="process-num">Step 02</div>
+          <h3 class="process-name">Strategy & Concept</h3>
+          <p class="process-desc">We develop a creative strategy and mood board tailored to your brand. Every creative decision is made with intention and purpose.</p>
+        </div>
+        <div class="process-step reveal reveal-delay-3">
+          <div class="process-num">Step 03</div>
+          <h3 class="process-name">Production</h3>
+          <p class="process-desc">Our team crafts your project with precision — editing, animating, grading, and polishing until every frame is exceptional.</p>
+        </div>
+        <div class="process-step reveal reveal-delay-4">
+          <div class="process-num">Step 04</div>
+          <h3 class="process-name">Delivery & Support</h3>
+          <p class="process-desc">We deliver all formats you need with revision rounds included. Post-delivery support ensures you're completely satisfied.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials" class="padded" style="background: var(--bg2);">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-index">05 — Testimonials</div>
+        <h2 class="section-title">Client <em>Words</em></h2>
+      </div>
+      <div class="testimonials-inner reveal">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Westcrest Media took our brand video to a completely different level. The motion graphics were stunning — exactly what we had in our heads but couldn't articulate."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">A</div>
+            <div>
+              <div class="testimonial-name">Arjun Mehta</div>
+              <div class="testimonial-role">Founder, Elevate Agency</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"The CinemaFlow plugin pack is worth every rupee. I've used it on five client projects already — saves hours of work and the quality is indistinguishable from big studios."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">S</div>
+            <div>
+              <div class="testimonial-name">Sara Kim</div>
+              <div class="testimonial-role">Freelance Video Editor, Seoul</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Delivered 3 days early, exceeded the brief, and the communication was impeccable throughout. Westcrest is our go-to studio for all motion work going forward."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">R</div>
+            <div>
+              <div class="testimonial-name">Riya Patel</div>
+              <div class="testimonial-role">Marketing Director, Luxora</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="padded">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info reveal">
+          <div class="section-index">06 — Contact</div>
+          <h2 class="contact-info-title">Let's Create<br /><em>Something Great</em></h2>
+          <p class="contact-info-desc">Ready to bring your vision to life? Tell us about your project and we'll get back to you within 24 hours with a custom proposal.</p>
+          <div class="contact-details">
+            <div class="contact-detail-item">
+              <div class="contact-detail-icon">✉</div>
+              <div>
+                <div class="contact-detail-label">Email</div>
+                <div class="contact-detail-value">hello@westcrestmedia.com</div>
+              </div>
+            </div>
+            <div class="contact-detail-item">
+              <div class="contact-detail-icon">📞</div>
+              <div>
+                <div class="contact-detail-label">WhatsApp</div>
+                <div class="contact-detail-value">+91 98765 43210</div>
+              </div>
+            </div>
+            <div class="contact-detail-item">
+              <div class="contact-detail-icon">⏱</div>
+              <div>
+                <div class="contact-detail-label">Response Time</div>
+                <div class="contact-detail-value">Within 24 Hours</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-2">
+          <form class="contact-form" onsubmit="handleSubmit(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input class="form-input" type="text" placeholder="Your name" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input class="form-input" type="text" placeholder="Last name" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input class="form-input" type="email" placeholder="your@email.com" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Service Required</label>
+              <select class="form-select">
+                <option value="">Select a service...</option>
+                <option>Video Editing</option>
+                <option>Motion Graphics</option>
+                <option>Color Grading</option>
+                <option>After Effects VFX</option>
+                <option>Sound Design</option>
+                <option>Brand Video Package</option>
+                <option>Plugin / Product Purchase</option>
+                <option>Custom Bundle</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Project Details</label>
+              <textarea class="form-textarea" placeholder="Tell us about your project — timeline, budget, goals, references..." required></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="border:none; cursor:pointer; width:100%; text-align:center;">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo">WESTCREST <span>MEDIA</span></div>
+          <div class="footer-tagline">Premium Video & Motion Studio</div>
+        </div>
+        <div class="footer-links-group">
+          <div class="footer-col">
+            <h4>Services</h4>
+            <ul>
+              <li><a href="#services">Video Editing</a></li>
+              <li><a href="#services">Motion Graphics</a></li>
+              <li><a href="#services">Color Grading</a></li>
+              <li><a href="#services">VFX & Animation</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Shop</h4>
+            <ul>
+              <li><a href="#shop">AE Plugins</a></li>
+              <li><a href="#shop">LUT Packs</a></li>
+              <li><a href="#shop">Project Files</a></li>
+              <li><a href="#shop">Bundles</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#portfolio">Portfolio</a></li>
+              <li><a href="#process">Our Process</a></li>
+              <li><a href="#testimonials">Testimonials</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copy">© 2024 Westcrest Media. All rights reserved.</div>
+        <div class="social-links">
+          <a class="social-link" href="#" title="Instagram">IG</a>
+          <a class="social-link" href="#" title="YouTube">YT</a>
+          <a class="social-link" href="#" title="Behance">BE</a>
+          <a class="social-link" href="#" title="LinkedIn">LI</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOAST -->
+  <div id="toast" style="position:fixed;bottom:36px;right:36px;z-index:9000;background:var(--gold);color:var(--bg);padding:14px 28px;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(.25,.46,.45,.94);">✓ Added to cart!</div>
+
+  <script>
+    // LOADER
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+      }, 2000);
+    });
+
+    // CURSOR
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx+'px'; dot.style.top = my+'px'; });
+    function animRing() { rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animRing); }
+    animRing();
+    document.querySelectorAll('a,button,.service-card,.shop-card,.portfolio-item,.filter-btn').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+    });
+
+    // NAV SCROLL
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // MOBILE MENU
+    function toggleMobile() { document.getElementById('mobileMenu').classList.toggle('open'); }
+    function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+    // REVEAL ON SCROLL
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+
+    // COUNTER ANIMATION
+    function animateCount(el, target) {
+      let current = 0;
+      const step = target / 60;
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) { current = target; clearInterval(timer); }
+        el.textContent = Math.floor(current) + (el.dataset.suffix || '');
+      }, 24);
+    }
+    const statNums = document.querySelectorAll('.stat-num[data-target]');
+    const statObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !e.target.dataset.animated) {
+          e.target.dataset.animated = '1';
+          animateCount(e.target, parseInt(e.target.dataset.target));
+        }
+      });
+    }, { threshold: 0.5 });
+    statNums.forEach(el => statObs.observe(el));
+
+    // PORTFOLIO FILTER
+    function filterPortfolio(btn, cat) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.portfolio-item').forEach(item => {
+        const show = cat === 'all' || item.dataset.cat === cat;
+        item.style.opacity = show ? '1' : '0.2';
+        item.style.transform = show ? '' : 'scale(0.97)';
+        item.style.transition = 'opacity 0.4s, transform 0.4s';
+      });
+    }
+
+    // ADD TO CART
+    function addToCart(name) {
+      const toast = document.getElementById('toast');
+      toast.textContent = '✓ ' + name + ' added!';
+      toast.style.transform = 'translateY(0)';
+      toast.style.opacity = '1';
+      setTimeout(() => { toast.style.transform = 'translateY(80px)'; toast.style.opacity = '0'; }, 2800);
+    }
+
+    // FORM SUBMIT
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type=submit]');
+      btn.textContent = '✓ Message Sent!';
+      btn.style.background = '#2a5a2a';
+      setTimeout(() => { btn.textContent = 'Send Message'; btn.style.background = ''; e.target.reset(); }, 3000);
+    }
+
+    // SMOOTH SCROLL FOR NAV
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+  </script>
+</body>
+</html>
