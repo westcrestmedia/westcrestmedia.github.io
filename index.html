@@ -552,7 +552,7 @@
     .testimonials-slider:active { cursor: grabbing; }
     .testimonials-track {
       display: flex; gap: 24px;
-      transition: transform 0.5s cubic-bezier(.25,.46,.45,.94);
+      transition: transform 2.4s cubic-bezier(0.16, 1, 0.3, 1);
       will-change: transform;
     }
     .testimonial-card {
@@ -1098,7 +1098,7 @@
               <div class="contact-detail-icon">✉</div>
               <div>
                 <div class="contact-detail-label">Email</div>
-                <div class="contact-detail-value">westcrestmedia@gmail.com</div>
+                <div class="contact-detail-value">hello@westcrestmedia.com</div>
               </div>
             </div>
             <div class="contact-detail-item">
@@ -1365,53 +1365,117 @@
 
     setTimeout(() => { setupMarquee(); marqueeFrame(); }, 200);
 
-    // ─── TESTIMONIALS SLIDER (3 visible, drag + arrows + dots) ───
+    // ─── TESTIMONIALS SLIDER - Seamless Infinite Loop ───
     const testimTrack = document.getElementById('testimTrack');
-    const allCards = testimTrack.querySelectorAll('.testimonial-card');
-    const totalCards = allCards.length;
-    let testimIdx = 0;
+    const tSlider = document.getElementById('testimSlider');
     let tDragging = false, tStartX = 0, tDragDiff = 0;
-    let cardsVisible = 3;
+    let realIdx = 0; // index in original cards
+    let currentPos = 0; // actual transform position
 
-    function getCardsVisible() {
-      const w = window.innerWidth;
-      if (w <= 600) return 1;
-      if (w <= 900) return 2;
+    function getCV() {
+      if (window.innerWidth <= 600) return 1;
+      if (window.innerWidth <= 900) return 2;
       return 3;
     }
 
-    function getSlideWidth() {
-      const slider = document.getElementById('testimSlider');
-      const gap = 24;
-      const cv = getCardsVisible();
-      return (slider.offsetWidth - gap * (cv - 1)) / cv + gap;
+    function getGap() { return 24; }
+
+    function getCardW() {
+      const cv = getCV();
+      return (tSlider.offsetWidth - getGap() * (cv - 1)) / cv;
     }
 
-    function updateDots() {
-      const cv = getCardsVisible();
-      const maxIdx = totalCards - cv;
-      const dots = document.querySelectorAll('.testim-dot');
-      dots.forEach((d, i) => d.classList.toggle('active', i === testimIdx));
+    function getSlideW() { return getCardW() + getGap(); }
+
+    // Clone cards for infinite loop
+    function setupInfiniteSlider() {
+      // Remove old clones first
+      testimTrack.querySelectorAll('.clone').forEach(c => c.remove());
+      const origCards = Array.from(testimTrack.querySelectorAll('.testimonial-card:not(.clone)'));
+      const cv = getCV();
+      const cardW = getCardW();
+
+      // Set card widths
+      origCards.forEach(c => { c.style.width = cardW + 'px'; c.style.flexShrink = '0'; });
+
+      // Clone first cv cards and append at end
+      // Clone last cv cards and prepend at start
+      const clonesBefore = origCards.slice(-cv).map(c => {
+        const cl = c.cloneNode(true); cl.classList.add('clone'); return cl;
+      });
+      const clonesAfter = origCards.slice(0, cv).map(c => {
+        const cl = c.cloneNode(true); cl.classList.add('clone'); return cl;
+      });
+
+      clonesBefore.forEach(cl => { cl.style.width = cardW + 'px'; cl.style.flexShrink = '0'; testimTrack.insertBefore(cl, testimTrack.firstChild); });
+      clonesAfter.forEach(cl => { cl.style.width = cardW + 'px'; cl.style.flexShrink = '0'; testimTrack.appendChild(cl); });
+
+      // Start position = after clones at beginning
+      const startPos = -(cv * getSlideW());
+      testimTrack.style.transition = 'none';
+      testimTrack.style.transform = `translateX(${startPos}px)`;
+      currentPos = startPos;
     }
 
-    function testimGoTo(index) {
-      const cv = getCardsVisible();
-      const maxIdx = Math.max(0, totalCards - cv);
-      if (index < 0) index = 0;
-      if (index > maxIdx) index = maxIdx;
-      testimIdx = index;
-      const slideW = getSlideWidth();
-      testimTrack.style.transform = `translateX(-${testimIdx * slideW}px)`;
+    function getRealCards() {
+      return Array.from(testimTrack.querySelectorAll('.testimonial-card:not(.clone)'));
+    }
+
+    function slideTo(pos, animate) {
+      testimTrack.style.transition = animate ? 'transform 2.4s cubic-bezier(0.16, 1, 0.3, 1)' : 'none';
+      testimTrack.style.transform = `translateX(${pos}px)`;
+      currentPos = pos;
+    }
+
+    function testimGoTo(idx, animate = true) {
+      const cv = getCV();
+      const origCards = getRealCards();
+      const total = origCards.length;
+
+      // Clamp with infinite logic
+      realIdx = idx;
+      const offset = cv; // number of clones before
+      const targetPos = -((offset + realIdx) * getSlideW());
+      slideTo(targetPos, animate);
       updateDots();
     }
 
-    function testimSlide(dir) { testimGoTo(testimIdx + dir); }
+    function updateDots() {
+      const cv = getCV();
+      const origCards = getRealCards();
+      const total = origCards.length;
+      const maxIdx = total - cv;
+      const dots = document.querySelectorAll('.testim-dot');
+      const dotIdx = Math.min(realIdx, dots.length - 1);
+      dots.forEach((d, i) => d.classList.toggle('active', i === dotIdx));
+    }
 
-    // Resize handler
-    window.addEventListener('resize', () => { testimGoTo(testimIdx); });
+    function testimSlide(dir) {
+      const cv = getCV();
+      const total = getRealCards().length;
+      testimGoTo(realIdx + dir);
+    }
+
+    // After transition ends — if we went to clone, jump silently
+    testimTrack.addEventListener('transitionend', () => {
+      const cv = getCV();
+      const total = getRealCards().length;
+      if (realIdx < 0) {
+        realIdx = total - cv;
+        testimGoTo(realIdx, false);
+      } else if (realIdx > total - cv) {
+        realIdx = 0;
+        testimGoTo(0, false);
+      }
+    });
+
+    // Resize
+    window.addEventListener('resize', () => {
+      setupInfiniteSlider();
+      testimGoTo(realIdx, false);
+    });
 
     // Mouse drag
-    const tSlider = document.getElementById('testimSlider');
     tSlider.addEventListener('mousedown', e => {
       tDragging = true; tStartX = e.clientX; tDragDiff = 0;
       testimTrack.style.transition = 'none';
@@ -1419,19 +1483,17 @@
     tSlider.addEventListener('mousemove', e => {
       if (!tDragging) return;
       tDragDiff = e.clientX - tStartX;
-      const slideW = getSlideWidth();
-      testimTrack.style.transform = `translateX(${-testimIdx * slideW + tDragDiff}px)`;
+      testimTrack.style.transform = `translateX(${currentPos + tDragDiff}px)`;
     });
-    function endTestimDrag() {
+    function endDrag() {
       if (!tDragging) return;
       tDragging = false;
-      testimTrack.style.transition = '';
-      if (tDragDiff < -60) testimSlide(1);
-      else if (tDragDiff > 60) testimSlide(-1);
-      else testimGoTo(testimIdx);
+      if (tDragDiff < -60) { currentPos += tDragDiff; testimSlide(1); }
+      else if (tDragDiff > 60) { currentPos += tDragDiff; testimSlide(-1); }
+      else testimGoTo(realIdx);
     }
-    tSlider.addEventListener('mouseup', endTestimDrag);
-    tSlider.addEventListener('mouseleave', endTestimDrag);
+    tSlider.addEventListener('mouseup', endDrag);
+    tSlider.addEventListener('mouseleave', endDrag);
 
     // Touch drag
     tSlider.addEventListener('touchstart', e => {
@@ -1440,27 +1502,19 @@
     }, {passive:true});
     tSlider.addEventListener('touchmove', e => {
       tDragDiff = e.touches[0].clientX - tStartX;
-      const slideW = getSlideWidth();
-      testimTrack.style.transform = `translateX(${-testimIdx * slideW + tDragDiff}px)`;
+      testimTrack.style.transform = `translateX(${currentPos + tDragDiff}px)`;
     }, {passive:true});
     tSlider.addEventListener('touchend', () => {
-      testimTrack.style.transition = '';
-      if (tDragDiff < -60) testimSlide(1);
-      else if (tDragDiff > 60) testimSlide(-1);
-      else testimGoTo(testimIdx);
+      if (tDragDiff < -60) { currentPos += tDragDiff; testimSlide(1); }
+      else if (tDragDiff > 60) { currentPos += tDragDiff; testimSlide(-1); }
+      else testimGoTo(realIdx);
     });
 
     // Auto slide every 6 seconds
-    setInterval(() => {
-      if (!tDragging) {
-        const cv = getCardsVisible();
-        const maxIdx = totalCards - cv;
-        testimGoTo(testimIdx >= maxIdx ? 0 : testimIdx + 1);
-      }
-    }, 6000);
+    setInterval(() => { if (!tDragging) testimSlide(1); }, 6000);
 
     // Init
-    setTimeout(() => testimGoTo(0), 150);
+    setTimeout(() => { setupInfiniteSlider(); testimGoTo(0, false); }, 200);
 
   </script>
 </body>
