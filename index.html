@@ -11,11 +11,11 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #080808;
-      --bg2: #0d0d0d;
-      --bg3: #111111;
-      --surface: #161616;
-      --border: rgba(255,255,255,0.07);
+      --bg: #111118;
+      --bg2: #16161e;
+      --bg3: #1c1c26;
+      --surface: #1e1e28;
+      --border: rgba(255,255,255,0.10);
       --gold: #c8a96e;
       --gold2: #e8c98e;
       --gold-dim: rgba(200,169,110,0.15);
@@ -140,7 +140,10 @@
     }
     .nav-cta:hover { background: var(--gold2); transform: translateY(-1px); }
     .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
-    .hamburger span { width: 28px; height: 1px; background: var(--white); transition: 0.3s; }
+    .hamburger span { width: 28px; height: 1px; background: var(--white); transition: 0.3s; display: block; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
     /* ─── HERO ─── */
     #hero {
@@ -252,10 +255,16 @@
       padding: 28px 0;
       border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
       overflow: hidden; background: var(--bg2);
+      cursor: grab; user-select: none;
     }
-    .marquee-track {
+    .marquee-wrap:active { cursor: grabbing; }
+    .marquee-inner {
+      display: flex; width: max-content;
+    }
+    .marquee-group {
       display: flex; gap: 60px; white-space: nowrap;
-      animation: marquee 22s linear infinite;
+      animation: marqueeLoop 28s linear infinite;
+      flex-shrink: 0;
     }
     .marquee-item {
       font-family: var(--font-display); font-style: italic;
@@ -263,7 +272,10 @@
       flex-shrink: 0; display: flex; align-items: center; gap: 60px;
     }
     .marquee-item::after { content: '✦'; color: var(--gold); font-style: normal; font-size: 0.6rem; }
-    @keyframes marquee { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+    @keyframes marqueeLoop {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
 
     /* ─── SERVICES ─── */
     #services { background: var(--bg); }
@@ -342,14 +354,14 @@
     .thumb-inner {
       width: 100%; height: 100%; display: flex;
       align-items: center; justify-content: center;
-      font-size: 3rem; opacity: 0.15;
+      font-size: 3rem; opacity: 0.5;
     }
     .portfolio-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(8,8,8,0.95) 0%, transparent 60%);
+      background: linear-gradient(to top, rgba(10,10,18,0.97) 0%, rgba(10,10,18,0.3) 50%, transparent 100%);
       display: flex; flex-direction: column;
       justify-content: flex-end; padding: 28px;
-      transform: translateY(10px); opacity: 0;
+      transform: translateY(0); opacity: 1;
       transition: all 0.4s cubic-bezier(.25,.46,.45,.94);
     }
     .portfolio-item:hover .portfolio-overlay { opacity: 1; transform: translateY(0); }
@@ -443,19 +455,6 @@
 
     /* ─── TESTIMONIALS ─── */
     #testimonials { background: var(--bg); overflow: hidden; }
-    .testimonials-inner { display: flex; gap: 28px; }
-    .testimonial-card {
-      background: var(--surface); border: 1px solid var(--border);
-      padding: 44px; flex: 0 0 420px;
-      position: relative; overflow: hidden;
-    }
-    .testimonial-card::before {
-      content: '"'; position: absolute;
-      top: -20px; left: 20px;
-      font-family: var(--font-display); font-size: 10rem;
-      color: var(--gold); opacity: 0.05; line-height: 1;
-      pointer-events: none;
-    }
     .testimonial-stars { color: var(--gold); font-size: 0.7rem; margin-bottom: 20px; letter-spacing: 3px; }
     .testimonial-text {
       font-family: var(--font-display); font-size: 1.05rem;
@@ -545,7 +544,55 @@
     }
     .social-link:hover { border-color: var(--gold); color: var(--gold); }
 
-    /* ─── REVEAL ANIMATIONS ─── */
+    /* ─── TESTIMONIALS SLIDER ─── */
+    .testimonials-slider {
+      overflow: hidden; cursor: grab; user-select: none;
+      width: 100%;
+    }
+    .testimonials-slider:active { cursor: grabbing; }
+    .testimonials-track {
+      display: flex; gap: 24px;
+      transition: transform 0.5s cubic-bezier(.25,.46,.45,.94);
+      will-change: transform;
+    }
+    .testimonial-card {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 44px; flex-shrink: 0;
+      width: calc((100% - 48px) / 3);
+      position: relative; overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .testimonial-card:hover { border-color: var(--gold-dim); }
+    .testimonial-card::before {
+      content: '"'; position: absolute;
+      top: -20px; left: 20px;
+      font-family: var(--font-display); font-size: 10rem;
+      color: var(--gold); opacity: 0.05; line-height: 1;
+      pointer-events: none;
+    }
+    .testimonial-arrow {
+      width: 44px; height: 44px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--white); font-size: 1rem; cursor: pointer;
+      transition: border-color 0.3s, color 0.3s, background 0.3s;
+      font-family: var(--font-sans);
+    }
+    .testimonial-arrow:hover { border-color: var(--gold); color: var(--gold); }
+    .testim-dot {
+      width: 24px; height: 2px; border: none;
+      background: var(--border); cursor: pointer;
+      transition: background 0.3s, width 0.3s;
+      padding: 0;
+    }
+    .testim-dot.active { background: var(--gold); width: 40px; }
+    @media (max-width: 900px) {
+      .testimonial-card { width: calc((100% - 24px) / 2); }
+    }
+    @media (max-width: 600px) {
+      .testimonial-card { width: 100%; padding: 28px; }
+    }
+
+    /* ─── MARQUEE DRAGGABLE ─── */
     .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
     .reveal-delay-1 { transition-delay: 0.1s; }
@@ -556,7 +603,7 @@
     /* ─── MOBILE NAV ─── */
     .mobile-menu {
       display: none; position: fixed; inset: 0; z-index: 500;
-      background: var(--bg); flex-direction: column;
+      background: rgba(17,17,24,0.98); flex-direction: column;
       align-items: center; justify-content: center; gap: 36px;
     }
     .mobile-menu.open { display: flex; }
@@ -566,6 +613,17 @@
       transition: color 0.3s;
     }
     .mobile-menu a:hover { color: var(--gold); }
+    .mobile-close-btn {
+      position: absolute; top: 24px; right: 24px;
+      width: 44px; height: 44px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--white); font-size: 1.4rem;
+      cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .mobile-close-btn:hover { border-color: var(--gold); color: var(--gold); }
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 1100px) {
@@ -616,6 +674,7 @@
 
   <!-- MOBILE MENU -->
   <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close-btn" onclick="closeMobile()">✕</button>
     <a href="#services" onclick="closeMobile()">Services</a>
     <a href="#portfolio" onclick="closeMobile()">Portfolio</a>
     <a href="#shop" onclick="closeMobile()">Shop</a>
@@ -659,26 +718,32 @@
   </section>
 
   <!-- MARQUEE -->
-  <div class="marquee-wrap">
-    <div class="marquee-track" id="marqueeTrack">
-      <span class="marquee-item">Video Editing</span>
-      <span class="marquee-item">Motion Graphics</span>
-      <span class="marquee-item">Color Grading</span>
-      <span class="marquee-item">After Effects Plugins</span>
-      <span class="marquee-item">Premiere Presets</span>
-      <span class="marquee-item">Cinematic LUTs</span>
-      <span class="marquee-item">Title Animations</span>
-      <span class="marquee-item">Sound Design</span>
-      <span class="marquee-item">Visual Effects</span>
-      <span class="marquee-item">Project Templates</span>
-      <span class="marquee-item">Video Editing</span>
-      <span class="marquee-item">Motion Graphics</span>
-      <span class="marquee-item">Color Grading</span>
-      <span class="marquee-item">After Effects Plugins</span>
-      <span class="marquee-item">Premiere Presets</span>
-      <span class="marquee-item">Cinematic LUTs</span>
-      <span class="marquee-item">Title Animations</span>
-      <span class="marquee-item">Sound Design</span>
+  <div class="marquee-wrap" id="marqueeWrap">
+    <div class="marquee-inner" id="marqueeInner">
+      <div class="marquee-group" id="marqueeGroup1">
+        <span class="marquee-item">Video Editing</span>
+        <span class="marquee-item">Motion Graphics</span>
+        <span class="marquee-item">Color Grading</span>
+        <span class="marquee-item">After Effects Plugins</span>
+        <span class="marquee-item">Premiere Presets</span>
+        <span class="marquee-item">Cinematic LUTs</span>
+        <span class="marquee-item">Title Animations</span>
+        <span class="marquee-item">Sound Design</span>
+        <span class="marquee-item">Visual Effects</span>
+        <span class="marquee-item">Project Templates</span>
+      </div>
+      <div class="marquee-group" aria-hidden="true">
+        <span class="marquee-item">Video Editing</span>
+        <span class="marquee-item">Motion Graphics</span>
+        <span class="marquee-item">Color Grading</span>
+        <span class="marquee-item">After Effects Plugins</span>
+        <span class="marquee-item">Premiere Presets</span>
+        <span class="marquee-item">Cinematic LUTs</span>
+        <span class="marquee-item">Title Animations</span>
+        <span class="marquee-item">Sound Design</span>
+        <span class="marquee-item">Visual Effects</span>
+        <span class="marquee-item">Project Templates</span>
+      </div>
     </div>
   </div>
 
@@ -949,44 +1014,73 @@
   <!-- TESTIMONIALS -->
   <section id="testimonials" class="padded" style="background: var(--bg2);">
     <div class="container">
-      <div class="section-header reveal">
-        <div class="section-index">05 — Testimonials</div>
-        <h2 class="section-title">Client <em>Words</em></h2>
+      <div class="section-header reveal" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:20px;">
+        <div>
+          <div class="section-index">05 — Testimonials</div>
+          <h2 class="section-title">Client <em>Words</em></h2>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="testimonial-arrow" onclick="testimSlide(-1)">←</button>
+          <button class="testimonial-arrow" onclick="testimSlide(1)">→</button>
+        </div>
       </div>
-      <div class="testimonials-inner reveal">
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-text">"Westcrest Media took our brand video to a completely different level. The motion graphics were stunning — exactly what we had in our heads but couldn't articulate."</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">A</div>
-            <div>
-              <div class="testimonial-name">Arjun Mehta</div>
-              <div class="testimonial-role">Founder, Elevate Agency</div>
+      <div class="testimonials-slider reveal" id="testimSlider">
+        <div class="testimonials-track" id="testimTrack">
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"Westcrest Media took our brand video to a completely different level. The motion graphics were stunning — exactly what we had in our heads but couldn't articulate."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">A</div>
+              <div><div class="testimonial-name">Arjun Mehta</div><div class="testimonial-role">Founder, Elevate Agency</div></div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"The CinemaFlow plugin pack is worth every rupee. I've used it on five client projects already — saves hours of work and the quality is indistinguishable from big studios."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">S</div>
+              <div><div class="testimonial-name">Sara Kim</div><div class="testimonial-role">Freelance Video Editor, Seoul</div></div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"Delivered 3 days early, exceeded the brief, and the communication was impeccable throughout. Westcrest is our go-to studio for all motion work going forward."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">R</div>
+              <div><div class="testimonial-name">Riya Patel</div><div class="testimonial-role">Marketing Director, Luxora</div></div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"Working with Westcrest was a game-changer for our YouTube channel. Our watch time went up 40% after their edit — the pacing and color work is just next level."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">K</div>
+              <div><div class="testimonial-name">Karan Verma</div><div class="testimonial-role">YouTube Creator, 500K+ Subscribers</div></div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"The LUT pack alone is worth 10x the price. My Instagram reels have never looked this cinematic. Clients keep asking me what my 'secret sauce' is — it's Westcrest!"</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">M</div>
+              <div><div class="testimonial-name">Maya Johnson</div><div class="testimonial-role">Wedding Videographer, Dubai</div></div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"Exceptional attention to detail, fast turnaround, and they genuinely care about the creative output. Our product launch video got 2M views in the first week!"</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">Z</div>
+              <div><div class="testimonial-name">Zara Ahmed</div><div class="testimonial-role">CMO, TechStart India</div></div>
             </div>
           </div>
         </div>
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-text">"The CinemaFlow plugin pack is worth every rupee. I've used it on five client projects already — saves hours of work and the quality is indistinguishable from big studios."</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">S</div>
-            <div>
-              <div class="testimonial-name">Sara Kim</div>
-              <div class="testimonial-role">Freelance Video Editor, Seoul</div>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-text">"Delivered 3 days early, exceeded the brief, and the communication was impeccable throughout. Westcrest is our go-to studio for all motion work going forward."</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">R</div>
-            <div>
-              <div class="testimonial-name">Riya Patel</div>
-              <div class="testimonial-role">Marketing Director, Luxora</div>
-            </div>
-          </div>
-        </div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:32px; justify-content:center;" id="testimDots">
+        <button class="testim-dot active" onclick="testimGoTo(0)"></button>
+        <button class="testim-dot" onclick="testimGoTo(1)"></button>
+        <button class="testim-dot" onclick="testimGoTo(2)"></button>
+        <button class="testim-dot" onclick="testimGoTo(3)"></button>
       </div>
     </div>
   </section>
@@ -1004,14 +1098,14 @@
               <div class="contact-detail-icon">✉</div>
               <div>
                 <div class="contact-detail-label">Email</div>
-                <div class="contact-detail-value">westcrestmedia@gmail.com</div>
+                <div class="contact-detail-value">hello@westcrestmedia.com</div>
               </div>
             </div>
             <div class="contact-detail-item">
               <div class="contact-detail-icon">📞</div>
               <div>
                 <div class="contact-detail-label">WhatsApp</div>
-                <div class="contact-detail-value">+91 93234 55707</div>
+                <div class="contact-detail-value">+91 98765 43210</div>
               </div>
             </div>
             <div class="contact-detail-item">
@@ -1144,8 +1238,14 @@
     });
 
     // MOBILE MENU
-    function toggleMobile() { document.getElementById('mobileMenu').classList.toggle('open'); }
-    function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+    function toggleMobile() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+      document.getElementById('hamburger').classList.toggle('open');
+    }
+    function closeMobile() {
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.getElementById('hamburger').classList.remove('open');
+    }
 
     // REVEAL ON SCROLL
     const revealEls = document.querySelectorAll('.reveal');
@@ -1212,6 +1312,156 @@
         if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
       });
     });
+
+    // ─── MARQUEE DRAG (Seamless infinite + Mouse + Touch) ───
+    const marqueeWrap = document.getElementById('marqueeWrap');
+    const marqueeGroups = document.querySelectorAll('.marquee-group');
+    let mDragging = false, mStartX = 0, mDragOffset = 0, mCurrentOffset = 0;
+    let marqueeSpeed = 0.5; // px per frame
+    let marqueeRunning = true;
+    let marqueePos = 0;
+    let marqueeWidth = 0;
+
+    function setupMarquee() {
+      marqueeWidth = document.getElementById('marqueeGroup1').offsetWidth + 60;
+      marqueeGroups.forEach(g => { g.style.animation = 'none'; g.style.transform = 'none'; });
+    }
+
+    function marqueeFrame() {
+      if (marqueeRunning && !mDragging) {
+        marqueePos -= marqueeSpeed;
+        if (Math.abs(marqueePos) >= marqueeWidth) marqueePos = 0;
+      }
+      document.getElementById('marqueeInner').style.transform = `translateX(${marqueePos + mDragOffset}px)`;
+      requestAnimationFrame(marqueeFrame);
+    }
+
+    marqueeWrap.addEventListener('mousedown', e => {
+      mDragging = true; mStartX = e.clientX; mDragOffset = 0;
+      marqueeWrap.style.cursor = 'grabbing';
+    });
+    marqueeWrap.addEventListener('mousemove', e => {
+      if (!mDragging) return;
+      mDragOffset = e.clientX - mStartX;
+    });
+    marqueeWrap.addEventListener('mouseup', () => {
+      if (!mDragging) return;
+      marqueePos += mDragOffset; mDragOffset = 0; mDragging = false;
+      marqueeWrap.style.cursor = 'grab';
+    });
+    marqueeWrap.addEventListener('mouseleave', () => {
+      if (mDragging) { marqueePos += mDragOffset; mDragOffset = 0; mDragging = false; marqueeWrap.style.cursor = 'grab'; }
+    });
+    marqueeWrap.addEventListener('touchstart', e => {
+      mDragging = true; mStartX = e.touches[0].clientX; mDragOffset = 0;
+    }, {passive:true});
+    marqueeWrap.addEventListener('touchmove', e => {
+      if (!mDragging) return;
+      mDragOffset = e.touches[0].clientX - mStartX;
+    }, {passive:true});
+    marqueeWrap.addEventListener('touchend', () => {
+      marqueePos += mDragOffset; mDragOffset = 0; mDragging = false;
+    });
+
+    setTimeout(() => { setupMarquee(); marqueeFrame(); }, 200);
+
+    // ─── TESTIMONIALS SLIDER (3 visible, drag + arrows + dots) ───
+    const testimTrack = document.getElementById('testimTrack');
+    const allCards = testimTrack.querySelectorAll('.testimonial-card');
+    const totalCards = allCards.length;
+    let testimIdx = 0;
+    let tDragging = false, tStartX = 0, tDragDiff = 0;
+    let cardsVisible = 3;
+
+    function getCardsVisible() {
+      const w = window.innerWidth;
+      if (w <= 600) return 1;
+      if (w <= 900) return 2;
+      return 3;
+    }
+
+    function getSlideWidth() {
+      const slider = document.getElementById('testimSlider');
+      const gap = 24;
+      const cv = getCardsVisible();
+      return (slider.offsetWidth - gap * (cv - 1)) / cv + gap;
+    }
+
+    function updateDots() {
+      const cv = getCardsVisible();
+      const maxIdx = totalCards - cv;
+      const dots = document.querySelectorAll('.testim-dot');
+      dots.forEach((d, i) => d.classList.toggle('active', i === testimIdx));
+    }
+
+    function testimGoTo(index) {
+      const cv = getCardsVisible();
+      const maxIdx = Math.max(0, totalCards - cv);
+      if (index < 0) index = 0;
+      if (index > maxIdx) index = maxIdx;
+      testimIdx = index;
+      const slideW = getSlideWidth();
+      testimTrack.style.transform = `translateX(-${testimIdx * slideW}px)`;
+      updateDots();
+    }
+
+    function testimSlide(dir) { testimGoTo(testimIdx + dir); }
+
+    // Resize handler
+    window.addEventListener('resize', () => { testimGoTo(testimIdx); });
+
+    // Mouse drag
+    const tSlider = document.getElementById('testimSlider');
+    tSlider.addEventListener('mousedown', e => {
+      tDragging = true; tStartX = e.clientX; tDragDiff = 0;
+      testimTrack.style.transition = 'none';
+    });
+    tSlider.addEventListener('mousemove', e => {
+      if (!tDragging) return;
+      tDragDiff = e.clientX - tStartX;
+      const slideW = getSlideWidth();
+      testimTrack.style.transform = `translateX(${-testimIdx * slideW + tDragDiff}px)`;
+    });
+    function endTestimDrag() {
+      if (!tDragging) return;
+      tDragging = false;
+      testimTrack.style.transition = '';
+      if (tDragDiff < -60) testimSlide(1);
+      else if (tDragDiff > 60) testimSlide(-1);
+      else testimGoTo(testimIdx);
+    }
+    tSlider.addEventListener('mouseup', endTestimDrag);
+    tSlider.addEventListener('mouseleave', endTestimDrag);
+
+    // Touch drag
+    tSlider.addEventListener('touchstart', e => {
+      tStartX = e.touches[0].clientX; tDragDiff = 0;
+      testimTrack.style.transition = 'none';
+    }, {passive:true});
+    tSlider.addEventListener('touchmove', e => {
+      tDragDiff = e.touches[0].clientX - tStartX;
+      const slideW = getSlideWidth();
+      testimTrack.style.transform = `translateX(${-testimIdx * slideW + tDragDiff}px)`;
+    }, {passive:true});
+    tSlider.addEventListener('touchend', () => {
+      testimTrack.style.transition = '';
+      if (tDragDiff < -60) testimSlide(1);
+      else if (tDragDiff > 60) testimSlide(-1);
+      else testimGoTo(testimIdx);
+    });
+
+    // Auto slide every 6 seconds
+    setInterval(() => {
+      if (!tDragging) {
+        const cv = getCardsVisible();
+        const maxIdx = totalCards - cv;
+        testimGoTo(testimIdx >= maxIdx ? 0 : testimIdx + 1);
+      }
+    }, 6000);
+
+    // Init
+    setTimeout(() => testimGoTo(0), 150);
+
   </script>
 </body>
 </html>
