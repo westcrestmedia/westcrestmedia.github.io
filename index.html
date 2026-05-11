@@ -1543,6 +1543,7 @@
     tSlider.addEventListener('mousedown', e => {
       tDragging = true; tStartX = e.clientX; tDragDiff = 0;
       testimTrack.style.transition = 'none';
+      clearInterval(autoSlideTimer); // pause auto slide
     });
     tSlider.addEventListener('mousemove', e => {
       if (!tDragging) return;
@@ -1555,6 +1556,7 @@
       if (tDragDiff < -60) { currentPos += tDragDiff; testimSlide(1); }
       else if (tDragDiff > 60) { currentPos += tDragDiff; testimSlide(-1); }
       else testimGoTo(realIdx);
+      startAutoSlide(); // resume auto slide
     }
     tSlider.addEventListener('mouseup', endDrag);
     tSlider.addEventListener('mouseleave', endDrag);
@@ -1563,6 +1565,7 @@
     tSlider.addEventListener('touchstart', e => {
       tStartX = e.touches[0].clientX; tDragDiff = 0;
       testimTrack.style.transition = 'none';
+      clearInterval(autoSlideTimer); // pause auto slide
     }, {passive:true});
     tSlider.addEventListener('touchmove', e => {
       tDragDiff = e.touches[0].clientX - tStartX;
@@ -1572,10 +1575,16 @@
       if (tDragDiff < -60) { currentPos += tDragDiff; testimSlide(1); }
       else if (tDragDiff > 60) { currentPos += tDragDiff; testimSlide(-1); }
       else testimGoTo(realIdx);
+      startAutoSlide(); // resume auto slide
     });
 
-    // Auto slide every 6 seconds
-    setInterval(() => { if (!tDragging) testimSlide(1); }, 6000);
+    // Auto slide
+    let autoSlideTimer;
+    function startAutoSlide() {
+      clearInterval(autoSlideTimer);
+      autoSlideTimer = setInterval(() => { testimSlide(1); }, 6000);
+    }
+    startAutoSlide();
 
     // Init
     setTimeout(() => { setupInfiniteSlider(); testimGoTo(0, false); }, 200);
