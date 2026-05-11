@@ -763,37 +763,37 @@
           <div class="service-icon">🎬</div>
           <h3 class="service-name">Video Editing</h3>
           <p class="service-desc">Professional editing for commercials, short films, YouTube channels, social reels, and corporate content. Every cut is deliberate, every moment crafted.</p>
-          <a href="#contact" class="service-link" onclick="smoothScrollTo('contact')">Enquire Now</a>
+          <a href="#contact" class="service-link">Enquire Now</a>
         </div>
         <div class="service-card reveal reveal-delay-2">
           <div class="service-icon">✦</div>
           <h3 class="service-name">Motion Graphics</h3>
           <p class="service-desc">Animated logos, kinetic typography, explainer animations, and broadcast-ready graphics. We turn your ideas into fluid, breathtaking motion.</p>
-          <a href="#contact" class="service-link" onclick="smoothScrollTo('contact')">Enquire Now</a>
+          <a href="#contact" class="service-link">Enquire Now</a>
         </div>
         <div class="service-card reveal reveal-delay-3">
           <div class="service-icon">🎨</div>
           <h3 class="service-name">Color Grading</h3>
           <p class="service-desc">Cinematic color grading and LUT creation to give your footage a signature look. DaVinci Resolve specialist with a trained colorist's eye.</p>
-          <a href="#contact" class="service-link" onclick="smoothScrollTo('contact')">Enquire Now</a>
+          <a href="#contact" class="service-link">Enquire Now</a>
         </div>
         <div class="service-card reveal reveal-delay-1">
           <div class="service-icon">⚡</div>
           <h3 class="service-name">After Effects VFX</h3>
           <p class="service-desc">Visual effects, compositing, and dynamic animations built in After Effects. From subtle enhancements to full cinematic VFX sequences.</p>
-          <a href="#contact" class="service-link" onclick="smoothScrollTo('contact')">Enquire Now</a>
+          <a href="#contact" class="service-link">Enquire Now</a>
         </div>
         <div class="service-card reveal reveal-delay-2">
           <div class="service-icon">🔊</div>
           <h3 class="service-name">Sound Design</h3>
           <p class="service-desc">Audio mixing, SFX layering, and music synchronization to give your video the emotional depth it deserves. Sound is half the experience.</p>
-          <a href="#contact" class="service-link" onclick="smoothScrollTo('contact')">Enquire Now</a>
+          <a href="#contact" class="service-link">Enquire Now</a>
         </div>
         <div class="service-card reveal reveal-delay-3">
           <div class="service-icon">📦</div>
           <h3 class="service-name">Brand Video Packages</h3>
           <p class="service-desc">Complete video branding suites including intro/outro animations, lower thirds, overlays, and reusable template kits for your brand identity.</p>
-          <a href="#contact" class="service-link" onclick="smoothScrollTo('contact')">Enquire Now</a>
+          <a href="#contact" class="service-link">Enquire Now</a>
         </div>
       </div>
     </div>
@@ -1362,12 +1362,16 @@
       setTimeout(() => { btn.textContent = 'Send Message'; btn.style.background = ''; e.target.reset(); }, 3000);
     }
 
-    // SMOOTH SCROLL FOR NAV
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', e => {
-        const target = document.querySelector(a.getAttribute('href'));
-        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
-      });
+    // SMOOTH SCROLL - ALL ANCHOR LINKS
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('a[href^="#"]');
+      if (!link) return;
+      const id = link.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
     });
 
     // ─── MARQUEE DRAG (Seamless infinite + Mouse + Touch) ───
