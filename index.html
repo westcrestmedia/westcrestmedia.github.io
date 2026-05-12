@@ -342,7 +342,6 @@
       aspect-ratio: 16/10; background: var(--surface);
       cursor: pointer;
     }
-    }
     .portfolio-thumb {
       width: 100%; height: 100%; object-fit: cover;
       transition: transform 0.6s cubic-bezier(.25,.46,.45,.94);
@@ -870,7 +869,6 @@
     </div>
   </div>
 
-
   <!-- PORTFOLIO -->
   <section id="portfolio" class="padded">
     <div class="container">
@@ -888,113 +886,163 @@
       </div>
 
       <!-- ALL TAB -->
-      <div id="pf-all">
-        <div style="margin-bottom:20px; width:100%;">
-          <div class="portfolio-item" style="cursor:pointer; aspect-ratio:16/9; width:100%;" onclick="openVideo('kz-hahwJG1E')">
-            <div style="position:relative; width:100%; height:100%; background:#0a0a0a;">
-              <img src="https://img.youtube.com/vi/kz-hahwJG1E/maxresdefault.jpg" alt="Showreel"
-                   style="width:100%; height:100%; object-fit:cover; opacity:0.85; transition:opacity 0.4s, transform 0.6s;"
-                   onmouseover="this.style.opacity='1'; this.style.transform='scale(1.04)'"
-                   onmouseout="this.style.opacity='0.85'; this.style.transform='scale(1)'"/>
-            </div>
-            <div class="portfolio-overlay">
-              <div class="portfolio-cat">Showreel 2025</div>
-              <div class="portfolio-name">Westcrest Media — Official Showcase</div>
-            </div>
-            <div class="portfolio-play">
-              <svg width="22" height="26" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
-            </div>
+      <div class="portfolio-grid reveal" id="pf-all">
+        <!-- Row 1: Showreel full-width BADA -->
+        <div class="portfolio-item" style="grid-column: span 3; cursor:pointer;" onclick="openVideo('kz-hahwJG1E')">
+          <div style="position:relative; width:100%; height:100%; background:#0a0a0a;">
+            <img src="https://img.youtube.com/vi/kz-hahwJG1E/maxresdefault.jpg" alt="Showreel"
+                 style="width:100%; height:100%; object-fit:cover; opacity:0.85; transition:opacity 0.4s, transform 0.6s;"
+                 onmouseover="this.style.opacity='1'; this.style.transform='scale(1.04)'"
+                 onmouseout="this.style.opacity='0.85'; this.style.transform='scale(1)'"/>
+          </div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Showreel 2025</div>
+            <div class="portfolio-name">Westcrest Media — Official Showcase</div>
+          </div>
+          <div class="portfolio-play">
+            <svg width="22" height="26" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
           </div>
         </div>
-        <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:20px;">
-          <div class="portfolio-item portfolio-carousel-box" style="aspect-ratio:16/10;">
-            <div class="carousel-track">
-              <div class="carousel-slide active">
-                <img src="images/portfolio4.png" alt="Orenzo"/>
-                <div class="portfolio-overlay"><div class="portfolio-cat">Brand Video</div><div class="portfolio-name">Orenzo — Product Showcase</div></div>
-              </div>
-              <div class="carousel-slide">
-                <img src="images/portfolio1.png" alt="Chamber of Legends"/>
-                <div class="portfolio-overlay"><div class="portfolio-cat">Video Editing</div><div class="portfolio-name">Chamber of Legends</div></div>
-              </div>
-              <div class="carousel-slide">
-                <img src="images/portfolio2.png" alt="COF Thumbnail"/>
-                <div class="portfolio-overlay"><div class="portfolio-cat">Thumbnail Design</div><div class="portfolio-name">COF Thumbnail</div></div>
-              </div>
-              <div class="carousel-slide">
-                <img src="images/portfolio3.png" alt="Legends Title"/>
-                <div class="portfolio-overlay"><div class="portfolio-cat">Motion Graphics</div><div class="portfolio-name">Legends — Cinematic Title</div></div>
+        <!-- Row 2: Coming Soon (Motion) -->
+        <div class="portfolio-item" style="background:var(--surface); display:flex; align-items:center; justify-content:center;">
+          <div style="text-align:center; color:var(--white-dim);">
+            <div style="font-size:2rem; margin-bottom:12px; opacity:0.3;">✦</div>
+            <div style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; opacity:0.4;">Coming Soon</div>
+          </div>
+        </div>
+        <!-- Row 2: Brand 4-photo carousel -->
+        <div class="portfolio-item portfolio-carousel-box">
+          <div class="carousel-track">
+            <div class="carousel-slide active">
+              <img src="images/portfolio4.png" alt="Orenzo"/>
+              <div class="portfolio-overlay">
+                <div class="portfolio-cat">Brand Video</div>
+                <div class="portfolio-name">Orenzo — Product Showcase</div>
               </div>
             </div>
-            <div class="carousel-dots-auto"></div>
-            <button class="carousel-arrow carousel-prev">←</button>
-            <button class="carousel-arrow carousel-next">→</button>
+            <div class="carousel-slide">
+              <img src="images/portfolio1.png" alt="Chamber of Legends"/>
+              <div class="portfolio-overlay">
+                <div class="portfolio-cat">Video Editing</div>
+                <div class="portfolio-name">Chamber of Legends</div>
+              </div>
+            </div>
+            <div class="carousel-slide">
+              <img src="images/portfolio2.png" alt="COF Thumbnail"/>
+              <div class="portfolio-overlay">
+                <div class="portfolio-cat">Thumbnail Design</div>
+                <div class="portfolio-name">Chamber of Legends — Thumbnail</div>
+              </div>
+            </div>
+            <div class="carousel-slide">
+              <img src="images/portfolio3.png" alt="Legends Title"/>
+              <div class="portfolio-overlay">
+                <div class="portfolio-cat">Motion Graphics</div>
+                <div class="portfolio-name">Legends — Cinematic Title</div>
+              </div>
+            </div>
           </div>
+          <div class="carousel-dots-auto"></div>
+          <button class="carousel-arrow carousel-prev">←</button>
+          <button class="carousel-arrow carousel-next">→</button>
         </div>
       </div>
 
       <!-- VIDEO TAB -->
-      <div id="pf-video" style="display:none;">
-        <div class="portfolio-grid reveal">
-          <div class="portfolio-item portfolio-item-large" style="cursor:pointer;" onclick="openVideo('kz-hahwJG1E')">
-            <div style="position:relative; width:100%; height:100%; background:#0a0a0a;">
-              <img src="https://img.youtube.com/vi/kz-hahwJG1E/maxresdefault.jpg" alt="Showreel"
-                   style="width:100%; height:100%; object-fit:cover; opacity:0.85; transition:opacity 0.4s, transform 0.6s;"
-                   onmouseover="this.style.opacity='1'; this.style.transform='scale(1.04)'"
-                   onmouseout="this.style.opacity='0.85'; this.style.transform='scale(1)'"/>
-            </div>
-            <div class="portfolio-overlay"><div class="portfolio-cat">Showreel 2025</div><div class="portfolio-name">Westcrest Media — Official Showcase</div></div>
-            <div class="portfolio-play"><svg width="22" height="26" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg></div>
+      <div class="portfolio-grid reveal" id="pf-video" style="display:none;">
+        <!-- Showreel Bada -->
+        <div class="portfolio-item portfolio-item-large" style="cursor:pointer;" onclick="openVideo('kz-hahwJG1E')">
+          <div style="position:relative; width:100%; height:100%; background:#0a0a0a;">
+            <img src="https://img.youtube.com/vi/kz-hahwJG1E/maxresdefault.jpg" alt="Showreel"
+                 style="width:100%; height:100%; object-fit:cover; opacity:0.85; transition:opacity 0.4s, transform 0.6s;"
+                 onmouseover="this.style.opacity='1'; this.style.transform='scale(1.04)'"
+                 onmouseout="this.style.opacity='0.85'; this.style.transform='scale(1)'"/>
           </div>
-          <div class="portfolio-item" style="display:flex; align-items:center; justify-content:center; background:var(--surface);">
-            <div style="text-align:center;"><div style="font-size:2rem; opacity:0.2; margin-bottom:10px;">🎬</div><div style="font-size:0.6rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--white-dim); opacity:0.4;">Coming Soon</div></div>
+          <div class="portfolio-overlay">
+            <div class="portfolio-cat">Showreel 2025</div>
+            <div class="portfolio-name">Westcrest Media — Official Showcase</div>
           </div>
-          <div class="portfolio-item" style="display:flex; align-items:center; justify-content:center; background:var(--surface);">
-            <div style="text-align:center;"><div style="font-size:2rem; opacity:0.2; margin-bottom:10px;">🎬</div><div style="font-size:0.6rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--white-dim); opacity:0.4;">Coming Soon</div></div>
+          <div class="portfolio-play">
+            <svg width="22" height="26" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+          </div>
+        </div>
+        <!-- Extra Box 1 — Khali -->
+        <div class="portfolio-item" style="background:var(--surface); display:flex; align-items:center; justify-content:center;">
+          <div style="text-align:center; color:var(--white-dim);">
+            <div style="font-size:2rem; margin-bottom:12px; opacity:0.3;">🎬</div>
+            <div style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; opacity:0.4;">Coming Soon</div>
+          </div>
+        </div>
+        <!-- Extra Box 2 — Khali -->
+        <div class="portfolio-item" style="background:var(--surface); display:flex; align-items:center; justify-content:center;">
+          <div style="text-align:center; color:var(--white-dim);">
+            <div style="font-size:2rem; margin-bottom:12px; opacity:0.3;">🎬</div>
+            <div style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; opacity:0.4;">Coming Soon</div>
           </div>
         </div>
       </div>
 
       <!-- MOTION TAB -->
-      <div id="pf-motion" style="display:none;">
-        <div class="portfolio-grid reveal">
-          <div class="portfolio-item" style="display:flex; align-items:center; justify-content:center; background:var(--surface);">
-            <div style="text-align:center;"><div style="font-size:2rem; opacity:0.2; margin-bottom:10px;">✦</div><div style="font-size:0.6rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--white-dim); opacity:0.4;">Coming Soon</div></div>
+      <div class="portfolio-grid reveal" id="pf-motion" style="display:none;">
+        <!-- Motion Box 1 — Khali -->
+        <div class="portfolio-item" style="background:var(--surface); display:flex; align-items:center; justify-content:center;">
+          <div style="text-align:center; color:var(--white-dim);">
+            <div style="font-size:2rem; margin-bottom:12px; opacity:0.3;">✦</div>
+            <div style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; opacity:0.4;">Coming Soon</div>
           </div>
-          <div class="portfolio-item" style="display:flex; align-items:center; justify-content:center; background:var(--surface);">
-            <div style="text-align:center;"><div style="font-size:2rem; opacity:0.2; margin-bottom:10px;">✦</div><div style="font-size:0.6rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--white-dim); opacity:0.4;">Coming Soon</div></div>
+        </div>
+        <!-- Motion Box 2 — Khali -->
+        <div class="portfolio-item" style="background:var(--surface); display:flex; align-items:center; justify-content:center;">
+          <div style="text-align:center; color:var(--white-dim);">
+            <div style="font-size:2rem; margin-bottom:12px; opacity:0.3;">✦</div>
+            <div style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; opacity:0.4;">Coming Soon</div>
           </div>
         </div>
       </div>
 
       <!-- BRAND TAB -->
-      <div id="pf-brand" style="display:none;">
-        <div class="portfolio-grid reveal">
-          <div class="portfolio-item portfolio-carousel-box">
-            <div class="carousel-track">
-              <div class="carousel-slide active">
-                <img src="images/portfolio4.png" alt="Orenzo"/>
-                <div class="portfolio-overlay"><div class="portfolio-cat">Brand Video</div><div class="portfolio-name">Orenzo — Product Showcase</div></div>
-              </div>
-              <div class="carousel-slide">
-                <img src="images/portfolio1.png" alt="Chamber of Legends"/>
-                <div class="portfolio-overlay"><div class="portfolio-cat">Video Editing</div><div class="portfolio-name">Chamber of Legends — Podcast</div></div>
-              </div>
-              <div class="carousel-slide">
-                <img src="images/portfolio2.png" alt="COF Thumbnail"/>
-                <div class="portfolio-overlay"><div class="portfolio-cat">Thumbnail Design</div><div class="portfolio-name">Chamber of Legends — Thumbnail</div></div>
-              </div>
-              <div class="carousel-slide">
-                <img src="images/portfolio3.png" alt="Legends Title"/>
-                <div class="portfolio-overlay"><div class="portfolio-cat">Motion Graphics</div><div class="portfolio-name">Legends — Cinematic Title</div></div>
+      <div class="portfolio-grid reveal" id="pf-brand" style="display:none;">
+        <!-- Brand Box 1 — 4 Photos -->
+        <div class="portfolio-item portfolio-carousel-box">
+          <div class="carousel-track">
+            <div class="carousel-slide active">
+              <img src="images/portfolio4.png" alt="Orenzo"/>
+              <div class="portfolio-overlay">
+                <div class="portfolio-cat">Brand Video</div>
+                <div class="portfolio-name">Orenzo — Product Showcase</div>
               </div>
             </div>
-            <div class="carousel-dots-auto"></div>
-            <button class="carousel-arrow carousel-prev">←</button>
-            <button class="carousel-arrow carousel-next">→</button>
+            <div class="carousel-slide">
+              <img src="images/portfolio1.png" alt="Chamber of Legends"/>
+              <div class="portfolio-overlay">
+                <div class="portfolio-cat">Video Editing</div>
+                <div class="portfolio-name">Chamber of Legends</div>
+              </div>
+            </div>
+            <div class="carousel-slide">
+              <img src="images/portfolio2.png" alt="COF Thumbnail"/>
+              <div class="portfolio-overlay">
+                <div class="portfolio-cat">Thumbnail Design</div>
+                <div class="portfolio-name">COF Thumbnail</div>
+              </div>
+            </div>
+            <div class="carousel-slide">
+              <img src="images/portfolio3.png" alt="Legends"/>
+              <div class="portfolio-overlay">
+                <div class="portfolio-cat">Motion Graphics</div>
+                <div class="portfolio-name">Legends Title</div>
+              </div>
+            </div>
           </div>
-          <div class="portfolio-item" style="display:flex; align-items:center; justify-content:center; background:var(--surface);">
-            <div style="text-align:center;"><div style="font-size:2rem; opacity:0.2; margin-bottom:10px;">📦</div><div style="font-size:0.6rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--white-dim); opacity:0.4;">Coming Soon</div></div>
+          <div class="carousel-dots-auto"></div>
+          <button class="carousel-arrow carousel-prev">←</button>
+          <button class="carousel-arrow carousel-next">→</button>
+        </div>
+        <!-- Brand Box 2 — Khali -->
+        <div class="portfolio-item" style="background:var(--surface); display:flex; align-items:center; justify-content:center;">
+          <div style="text-align:center; color:var(--white-dim);">
+            <div style="font-size:2rem; margin-bottom:12px; opacity:0.3;">📦</div>
+            <div style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; opacity:0.4;">Coming Soon</div>
           </div>
         </div>
       </div>
@@ -1344,10 +1392,19 @@
     function filterPortfolio(btn, cat) {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      ['pf-all','pf-video','pf-motion','pf-brand'].forEach(id => {
-        document.getElementById(id).style.display = 'none';
-      });
-      document.getElementById('pf-' + cat).style.display = 'block';
+      const all = document.getElementById('pf-all');
+      const video = document.getElementById('pf-video');
+      const motion = document.getElementById('pf-motion');
+      const brand = document.getElementById('pf-brand');
+      all.style.display = 'none';
+      video.style.display = 'none';
+      motion.style.display = 'none';
+      brand.style.display = 'none';
+      if (cat === 'all') all.style.display = 'grid';
+      else if (cat === 'video') video.style.display = 'grid';
+      else if (cat === 'motion') motion.style.display = 'grid';
+      else if (cat === 'brand') brand.style.display = 'grid';
+      // Re-init carousels for newly visible section
       setTimeout(initCarousels, 100);
     }
 
