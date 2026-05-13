@@ -1421,6 +1421,15 @@
     </div>
   </div>
 
+  <!-- IMAGE LIGHTBOX -->
+  <div id="imgLightbox" style="display:none; position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,0.95); align-items:center; justify-content:center; cursor:zoom-out;" onclick="closeLightbox()">
+    <div style="position:relative; max-width:90vw; max-height:90vh;" onclick="event.stopPropagation()">
+      <img id="lightboxImg" src="" alt="" style="max-width:90vw; max-height:85vh; object-fit:contain; display:block;"/>
+      <div id="lightboxCaption" style="text-align:center; margin-top:16px; font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold);"></div>
+      <button onclick="closeLightbox()" style="position:absolute; top:-48px; right:0; background:transparent; border:1px solid rgba(200,169,110,0.4); color:var(--gold); width:40px; height:40px; font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
+    </div>
+  </div>
+
   <!-- TOAST -->
   <div id="toast" style="position:fixed;bottom:36px;right:36px;z-index:9000;background:var(--gold);color:var(--bg);padding:14px 28px;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(.25,.46,.45,.94);">✓ Added to cart!</div>
 
@@ -1809,6 +1818,33 @@
 
     // Init
     setTimeout(() => { setupInfiniteSlider(); testimGoTo(0, false); }, 200);
+
+    // ─── IMAGE LIGHTBOX ───
+    function openLightbox(src, caption) {
+      const lb = document.getElementById('imgLightbox');
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightboxCaption').textContent = caption || '';
+      lb.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('imgLightbox').style.display = 'none';
+      document.getElementById('lightboxImg').src = '';
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+    // Carousel slides click → lightbox
+    document.querySelectorAll('.carousel-slide').forEach(slide => {
+      slide.style.cursor = 'zoom-in';
+      slide.addEventListener('click', function(e) {
+        // Arrows pe click kiya ho toh lightbox mat kholo
+        if (e.target.closest('.carousel-arrow')) return;
+        const img = this.querySelector('img');
+        const caption = this.querySelector('.portfolio-name')?.textContent || '';
+        if (img) openLightbox(img.src, caption);
+      });
+    });
 
   </script>
 </body>
