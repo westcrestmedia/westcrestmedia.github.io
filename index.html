@@ -734,6 +734,9 @@
   <div id="cursor">
     <div id="cursor-dot"></div>
     <div id="cursor-ring"></div>
+    <div id="cursor-t1" style="width:6px;height:6px;background:rgba(200,169,110,0.4);border-radius:50%;position:absolute;transform:translate(-50%,-50%);pointer-events:none;"></div>
+    <div id="cursor-t2" style="width:4px;height:4px;background:rgba(200,169,110,0.25);border-radius:50%;position:absolute;transform:translate(-50%,-50%);pointer-events:none;"></div>
+    <div id="cursor-t3" style="width:3px;height:3px;background:rgba(200,169,110,0.12);border-radius:50%;position:absolute;transform:translate(-50%,-50%);pointer-events:none;"></div>
   </div>
 
   <!-- LOADER -->
@@ -1526,9 +1529,23 @@
     // CURSOR
     const dot = document.getElementById('cursor-dot');
     const ring = document.getElementById('cursor-ring');
+    const t1 = document.getElementById('cursor-t1');
+    const t2 = document.getElementById('cursor-t2');
+    const t3 = document.getElementById('cursor-t3');
     let mx = 0, my = 0, rx = 0, ry = 0;
+    let t1x = 0, t1y = 0, t2x = 0, t2y = 0, t3x = 0, t3y = 0;
     document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx+'px'; dot.style.top = my+'px'; });
-    function animRing() { rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animRing); }
+    function animRing() {
+      rx += (mx-rx)*0.12; ry += (my-ry)*0.12;
+      ring.style.left = rx+'px'; ring.style.top = ry+'px';
+      t1x += (mx-t1x)*0.08; t1y += (my-t1y)*0.08;
+      t1.style.left = t1x+'px'; t1.style.top = t1y+'px';
+      t2x += (mx-t2x)*0.05; t2y += (my-t2y)*0.05;
+      t2.style.left = t2x+'px'; t2.style.top = t2y+'px';
+      t3x += (mx-t3x)*0.03; t3y += (my-t3y)*0.03;
+      t3.style.left = t3x+'px'; t3.style.top = t3y+'px';
+      requestAnimationFrame(animRing);
+    }
     animRing();
     document.querySelectorAll('a,button,.service-card,.shop-card,.portfolio-item,.filter-btn').forEach(el => {
       el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
