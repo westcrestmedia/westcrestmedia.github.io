@@ -1323,20 +1323,20 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">First Name</label>
-                <input class="form-input" type="text" placeholder="Your name" required />
+                <input id="cf-fname" class="form-input" type="text" placeholder="Your name" required />
               </div>
               <div class="form-group">
                 <label class="form-label">Last Name</label>
-                <input class="form-input" type="text" placeholder="Last name" />
+                <input id="cf-lname" class="form-input" type="text" placeholder="Last name" />
               </div>
             </div>
             <div class="form-group">
               <label class="form-label">Email Address</label>
-              <input class="form-input" type="email" placeholder="your@email.com" required />
+              <input id="cf-email" class="form-input" type="email" placeholder="your@email.com" required />
             </div>
             <div class="form-group">
               <label class="form-label">Service Required</label>
-              <select class="form-select">
+              <select id="cf-service" class="form-select">
                 <option value="">Select a service...</option>
                 <option>Video Editing</option>
                 <option>Motion Graphics</option>
@@ -1350,7 +1350,7 @@
             </div>
             <div class="form-group">
               <label class="form-label">Project Details</label>
-              <textarea class="form-textarea" placeholder="Tell us about your project — timeline, budget, goals, references..." required></textarea>
+              <textarea id="cf-message" class="form-textarea" placeholder="Tell us about your project — timeline, budget, goals, references..." required></textarea>
             </div>
             <button type="submit" class="btn-primary" style="border:none; cursor:pointer; width:100%; text-align:center;">Send Message</button>
           </form>
@@ -1423,7 +1423,7 @@
     </div>
   </div>
 
-  <!-- IMAGE LIGHTBOX -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <div id="imgLightbox" style="display:none; position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,0.95); align-items:center; justify-content:center;" onclick="closeLightbox()">
     <div style="position:relative; max-width:90vw; max-height:90vh; display:flex; flex-direction:column; align-items:center;" onclick="event.stopPropagation()">
       <img id="lightboxImg" src="" alt="" style="max-width:85vw; max-height:80vh; object-fit:contain; display:block; transition: opacity 0.3s;"/>
@@ -1607,13 +1607,36 @@
       setTimeout(() => { toast.style.transform = 'translateY(80px)'; toast.style.opacity = '0'; }, 2800);
     }
 
-    // FORM SUBMIT
+    // FORM SUBMIT — EmailJS
+    emailjs.init('rEv_loX3LvmEPHPGn');
     function handleSubmit(e) {
       e.preventDefault();
       const btn = e.target.querySelector('button[type=submit]');
-      btn.textContent = '✓ Message Sent!';
-      btn.style.background = '#2a5a2a';
-      setTimeout(() => { btn.textContent = 'Send Message'; btn.style.background = ''; e.target.reset(); }, 3000);
+      const fname = document.getElementById('cf-fname').value;
+      const lname = document.getElementById('cf-lname').value;
+      const email = document.getElementById('cf-email').value;
+      const service = document.getElementById('cf-service').value;
+      const message = document.getElementById('cf-message').value;
+
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+
+      emailjs.send('service_b1l1hlb', 'template_ullrqsm', {
+        from_name: fname + ' ' + lname,
+        from_email: email,
+        title: service || 'Not specified',
+        message: message,
+        email: email
+      }).then(() => {
+        btn.textContent = '✓ Message Sent!';
+        btn.style.background = '#2a5a2a';
+        e.target.reset();
+        setTimeout(() => { btn.textContent = 'Send Message'; btn.style.background = ''; btn.disabled = false; }, 3000);
+      }).catch(() => {
+        btn.textContent = '✕ Failed. Try Again.';
+        btn.style.background = '#5a2a2a';
+        setTimeout(() => { btn.textContent = 'Send Message'; btn.style.background = ''; btn.disabled = false; }, 3000);
+      });
     }
 
     // SMOOTH SCROLL - ALL ANCHOR LINKS
