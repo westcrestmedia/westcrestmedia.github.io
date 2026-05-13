@@ -27,6 +27,9 @@
 
   <meta name="google-site-verification" content="GYRilUxnP_0CiYDL-KdQjOQ7mE8-fNFzELhFlH94hGU" />
 
+  <!-- LENIS SMOOTH SCROLL -->
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
@@ -52,6 +55,23 @@
     }
 
     html { scroll-behavior: smooth; }
+
+    /* ─── LENIS SMOOTH SCROLL ─── */
+    html.lenis { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .lenis.lenis-stopped { overflow: hidden; }
+    .lenis.lenis-scrolling iframe { pointer-events: none; }
+
+    /* ─── PREMIUM MOTION ─── */
+    .hero-bg { will-change: transform; transform: translateZ(0); }
+    .hero-grid { will-change: transform; transform: translateZ(0); }
+    .portfolio-item img { will-change: transform; }
+    .service-card, .shop-card, .testimonial-card, .portfolio-item {
+      transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s ease, border-color 0.4s ease;
+    }
+    @media(max-width:768px){
+      .service-card:hover, .shop-card:hover, .testimonial-card:hover, .portfolio-item:hover { transform: translateY(-4px); }
+    }
 
     body {
       background: var(--bg);
@@ -1941,6 +1961,45 @@
         }));
         const activeIdx = allSlides.findIndex(s => s.classList.contains('active'));
         openLightbox(slides, activeIdx >= 0 ? activeIdx : 0);
+      });
+    });
+
+    // ─── LENIS SMOOTH SCROLL ───
+    const lenis = new Lenis({
+      duration: 1.2,
+      smoothWheel: true,
+      smoothTouch: false,
+      wheelMultiplier: 1,
+      touchMultiplier: 1.5,
+      lerp: 0.08
+    });
+    function rafLenis(time) { lenis.raf(time); requestAnimationFrame(rafLenis); }
+    requestAnimationFrame(rafLenis);
+
+    // ─── HERO PARALLAX ───
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const heroBg = document.querySelector('.hero-bg');
+      const heroGrid = document.querySelector('.hero-grid');
+      const heroContent = document.querySelector('.hero-content');
+      if (heroBg) heroBg.style.transform = `translateY(${scrollY * 0.12}px)`;
+      if (heroGrid) heroGrid.style.transform = `translateY(${scrollY * 0.06}px)`;
+      if (heroContent) heroContent.style.transform = `translateY(${scrollY * -0.02}px)`;
+    });
+
+    // ─── 3D CARD TILT ───
+    document.querySelectorAll('.service-card, .shop-card, .testimonial-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        if (window.innerWidth < 768) return;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const rotateY = ((x / rect.width) - 0.5) * 6;
+        const rotateX = ((y / rect.height) - 0.5) * -6;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)`;
       });
     });
 
