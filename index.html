@@ -1832,10 +1832,16 @@
     function openLightbox(slides, startIndex) {
       lbSlides = slides;
       lbIndex = startIndex;
-      document.getElementById('imgLightbox').style.display = 'flex';
+      const lb = document.getElementById('imgLightbox');
+      lb.style.display = 'flex';
       document.body.style.overflow = 'hidden';
       lbShow();
       lbStartAuto();
+
+      // Pause on hover/touch, resume on leave
+      const lbImg = document.getElementById('lightboxImg');
+      lbImg.onmouseenter = () => clearInterval(lbAutoTimer);
+      lbImg.onmouseleave = () => lbStartAuto();
     }
 
     function lbShow() {
