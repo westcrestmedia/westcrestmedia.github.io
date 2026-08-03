@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio — Westcrest Media | Featured Work & Client Reviews</title>
+  <meta name="description" content="Explore Westcrest Media's featured portfolio of video editing, motion graphics and creative projects. Read client testimonials and reviews." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://westcrestmedia.in/portfolio/" />
+  <link rel="alternate" hreflang="en" href="https://westcrestmedia.in/portfolio/" />
+  <link rel="alternate" hreflang="x-default" href="https://westcrestmedia.in/portfolio/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://westcrestmedia.in/portfolio/" />
+  <meta property="og:title" content="Portfolio — Westcrest Media | Featured Work & Reviews" />
+  <meta property="og:description" content="Explore featured portfolio work and read client testimonials from Westcrest Media." />
+  <meta property="og:image" content="https://westcrestmedia.in/images/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:site_name" content="Westcrest Media" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Portfolio — Westcrest Media" />
+  <meta name="twitter:description" content="Featured work and client testimonials from Westcrest Media." />
+  <meta name="twitter:image" content="https://westcrestmedia.in/images/og-image.jpg" />
+  <meta name="theme-color" content="#C9A84C" />
+  <link rel="icon" type="image/svg+xml" href="/images/w_logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/nav-landing.css" />
+  <link rel="stylesheet" href="/assets/css/landing-footer.css" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #111118; --bg2: #16161e; --bg3: #1c1c26; --surface: #1e1e28;
+      --border: rgba(255,255,255,0.10);
+      --gold: #c8a96e; --gold2: #e8c98e; --gold-dim: rgba(200,169,110,0.15);
+      --white: #f5f0e8; --white-dim: rgba(245,240,232,0.55); --white-faint: rgba(245,240,232,0.12);
+      --font-display: 'Cormorant Garamond', serif;
+      --font-sans: 'Syne', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--white); font-family: var(--font-sans); overflow-x: hidden; cursor: none; }
+    body::before { content:''; position:fixed; inset:0; z-index:1; pointer-events:none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"); opacity: 0.025; }
+    #cursor { position:fixed; top:0; left:0; z-index:9999; pointer-events:none; mix-blend-mode:difference; }
+    #cursor-dot { width:8px; height:8px; border-radius:50%; background:var(--gold); position:absolute; transform:translate(-50%,-50%); transition:transform 0.1s,width 0.2s,height 0.2s; }
+    #cursor-ring { width:36px; height:36px; border-radius:50%; border:1px solid rgba(200,169,110,0.5); position:absolute; transform:translate(-50%,-50%); transition:transform 0.18s cubic-bezier(.25,.46,.45,.94),width 0.3s,height 0.3s,border-color 0.3s; }
+    ::-webkit-scrollbar { width:3px; } ::-webkit-scrollbar-track { background:var(--bg); } ::-webkit-scrollbar-thumb { background:var(--gold); border-radius:2px; }
+    .container { max-width:1260px; margin:0 auto; padding:0 60px; }
+    .padded { padding:120px 0; }
+    .section-header { margin-bottom:80px; }
+    .section-index { font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.3em; color:var(--gold); text-transform:uppercase; margin-bottom:12px; }
+    .section-title { font-family:var(--font-display); font-size:clamp(2.8rem,5vw,5rem); font-weight:300; line-height:1.05; color:var(--white); }
+    .section-title em { font-style:italic; color:var(--gold); }
+    .section-desc { margin-top:20px; max-width:520px; font-size:0.82rem; line-height:1.9; color:var(--white-dim); letter-spacing:0.02em; }
+    .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.8s ease,transform 0.8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; } .reveal-delay-4 { transition-delay:0.4s; }
+    .portfolio-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .portfolio-item { position:relative; overflow:hidden; aspect-ratio:16/10; background:var(--surface); cursor:pointer; }
+    .portfolio-thumb { width:100%; height:100%; object-fit:cover; transition:transform 0.6s cubic-bezier(.25,.46,.45,.94); }
+    .portfolio-item:hover .portfolio-thumb { transform:scale(1.07); }
+    .portfolio-thumb-bg { width:100%; height:100%; background:var(--surface); display:flex; align-items:center; justify-content:center; transition:transform 0.6s cubic-bezier(.25,.46,.45,.94); }
+    .portfolio-item:hover .portfolio-thumb-bg { transform:scale(1.04); }
+    .thumb-inner { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:3rem; opacity:0.5; }
+    .portfolio-overlay { position:absolute; inset:0; background:linear-gradient(to top, rgba(10,10,18,0.97) 0%, rgba(10,10,18,0.3) 50%, transparent 100%); display:flex; flex-direction:column; justify-content:flex-end; padding:28px; transform:translateY(0); opacity:1; transition:all 0.4s cubic-bezier(.25,.46,.45,.94); }
+    .portfolio-item:hover .portfolio-overlay { opacity:1; transform:translateY(0); }
+    .portfolio-cat { font-size:0.55rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+    .portfolio-name { font-family:var(--font-display); font-size:1.4rem; font-weight:300; }
+    .portfolio-play { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:80px; height:80px; border-radius:50%; background:rgba(200,169,110,0.15); border:2px solid rgba(200,169,110,0.8); display:flex; align-items:center; justify-content:center; opacity:1; transition:opacity 0.4s,transform 0.4s,background 0.3s; backdrop-filter:blur(4px); }
+    .portfolio-play svg { fill:var(--gold); margin-left:6px; width:22px; height:26px; }
+    .portfolio-item:hover .portfolio-play { transform:translate(-50%,-50%) scale(1.15); background:rgba(200,169,110,0.3); border-color:var(--gold); }
+    .portfolio-item-large { grid-column: span 2; }
+    .portfolio-carousel-box { position:relative; overflow:hidden; aspect-ratio:16/10; }
+    .carousel-track { width:100%; height:100%; position:relative; }
+    .carousel-slide { position:absolute; inset:0; opacity:0; transition:opacity 1s ease; }
+    .carousel-slide.active { opacity:1; }
+    .carousel-slide img { width:100%; height:100%; object-fit:cover; }
+    .carousel-dots { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:10; }
+    .carousel-dot { width:20px; height:2px; background:rgba(255,255,255,0.4); cursor:pointer; border:none; padding:0; transition:background 0.3s, width 0.3s; }
+    .carousel-dot.active { background:var(--gold); width:36px; }
+    .carousel-arrow { position:absolute; top:50%; transform:translateY(-50%); width:36px; height:36px; background:rgba(0,0,0,0.5); border:1px solid rgba(200,169,110,0.4); color:var(--gold); font-size:0.9rem; cursor:pointer; z-index:10; transition:background 0.3s; }
+    .carousel-arrow:hover { background:rgba(200,169,110,0.2); }
+    .carousel-prev { left:12px; } .carousel-next { right:12px; }
+    .testimonials-slider { overflow:hidden; cursor:grab; user-select:none; width:100%; }
+    .testimonials-slider:active { cursor:grabbing; }
+    .testimonials-track { display:flex; gap:24px; transition:transform 2.4s cubic-bezier(0.16,1,0.3,1); will-change:transform; }
+    .testimonial-card { background:var(--surface); border:1px solid var(--border); padding:44px; flex-shrink:0; width:calc((100% - 48px) / 3); position:relative; overflow:hidden; transition:border-color 0.3s; }
+    .testimonial-card:hover { border-color:var(--gold-dim); }
+    .testimonial-card::before { content:'"'; position:absolute; top:-20px; left:20px; font-family:var(--font-display); font-size:10rem; color:var(--gold); opacity:0.05; line-height:1; pointer-events:none; }
+    .testimonial-stars { color:var(--gold); font-size:0.7rem; margin-bottom:20px; letter-spacing:3px; }
+    .testimonial-text { font-family:var(--font-display); font-size:1.05rem; font-style:italic; line-height:1.75; color:var(--white); margin-bottom:28px; }
+    .testimonial-author { display:flex; align-items:center; gap:16px; }
+    .testimonial-avatar { width:44px; height:44px; border-radius:50%; background:var(--gold-dim); border:1px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:1rem; color:var(--gold); }
+    .testimonial-name { font-size:0.78rem; font-weight:600; margin-bottom:2px; }
+    .testimonial-role { font-size:0.65rem; color:var(--white-dim); letter-spacing:0.08em; }
+    .testimonial-arrow { width:44px; height:44px; border:1px solid var(--border); background:transparent; color:var(--white); font-size:1rem; cursor:pointer; transition:border-color 0.3s,color 0.3s,background 0.3s; font-family:var(--font-sans); }
+    .testimonial-arrow:hover { border-color:var(--gold); color:var(--gold); }
+    .testim-dot { width:24px; height:2px; border:none; background:var(--border); cursor:pointer; transition:background 0.3s,width 0.3s; padding:0; }
+    .testim-dot.active { background:var(--gold); width:40px; }
+    .cta-banner { text-align:center; padding:100px 0; background:var(--bg2); }
+    .cta-banner h2 { font-family:var(--font-display); font-size:clamp(2.5rem,5vw,4.5rem); font-weight:300; margin-bottom:24px; }
+    .cta-banner h2 em { font-style:italic; color:var(--gold); }
+    .cta-banner p { font-size:0.82rem; color:var(--white-dim); letter-spacing:0.08em; margin-bottom:48px; }
+    .btn-row { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+    .btn-primary { display:inline-block; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; background:var(--gold); color:#0a0a12; padding:16px 36px; text-decoration:none; font-family:var(--font-sans); font-weight:600; transition:background 0.3s,transform 0.2s; }
+    .btn-primary:hover { background:var(--gold2); transform:translateY(-2px); }
+    .btn-ghost { display:inline-block; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; background:transparent; color:var(--gold); border:1px solid var(--gold); padding:15px 36px; text-decoration:none; font-family:var(--font-sans); transition:background 0.3s,color 0.3s,transform 0.2s; }
+    .btn-ghost:hover { background:var(--gold); color:#0a0a12; transform:translateY(-2px); }
+    @media (max-width: 900px) { .testimonial-card { width: calc((100% - 24px) / 2); } }
+    @media (max-width: 600px) { .testimonial-card { width: 100%; padding: 28px; } .portfolio-grid { grid-template-columns: 1fr; } }
+    @media(max-width:1100px) { .portfolio-grid { grid-template-columns:repeat(2,1fr); } .portfolio-item-large { grid-column: span 1; } }
+    @media(max-width:900px) { .container { padding:0 30px; } .padded { padding:80px 0; } }
+    @media(max-width:600px) { .container { padding:0 20px; } .padded { padding:60px 0; } }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR -->
+  <div id="cursor"><div id="cursor-dot"></div><div id="cursor-ring"></div></div>
+
+  <!-- HEADER -->
+  <nav id="navbar"></nav>
+  <script type="module" src="/assets/js/header-landing.js"></script>
+
+  <main>
+
+    <!-- PAGE HERO -->
+    <section class="padded" style="background:var(--bg2);">
+      <div class="container">
+        <div class="section-header reveal" style="text-align:center;">
+          <div class="section-index">Portfolio</div>
+          <h2 class="section-title">Featured <em>Work</em></h2>
+          <p style="color:var(--white-dim);font-size:0.85rem;letter-spacing:0.08em;margin-top:12px;max-width:500px;margin-left:auto;margin-right:auto;">Explore our latest projects and see what we've been creating for clients around the world.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO GRID -->
+    <section id="portfolio" class="padded">
+      <div class="container">
+        <div class="portfolio-grid reveal" id="pf-all">
+          <div class="portfolio-item portfolio-item-large" style="cursor:pointer;" onclick="openVideo('kz-hahwJG1E')">
+            <div style="position:relative;width:100%;height:100%;background:#0a0a0a;">
+              <img src="https://img.youtube.com/vi/kz-hahwJG1E/maxresdefault.jpg" alt="Showreel" style="width:100%;height:100%;object-fit:cover;opacity:0.85;transition:opacity 0.4s,transform 0.6s;" onmouseover="this.style.opacity='1';this.style.transform='scale(1.04)'" onmouseout="this.style.opacity='0.85';this.style.transform='scale(1)'"/>
+            </div>
+            <div class="portfolio-overlay">
+              <div class="portfolio-cat">Showreel 2025</div>
+              <div class="portfolio-name">Westcrest Media — Official Showcase</div>
+            </div>
+            <div class="portfolio-play"><svg width="22" height="26" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg></div>
+          </div>
+          <div class="portfolio-item" style="background:var(--surface);display:flex;align-items:center;justify-content:center;aspect-ratio:unset;min-height:320px;">
+            <div style="text-align:center;color:var(--white-dim);">
+              <img src="/images/w_logo.svg" alt="W" width="48" height="48" style="height:48px;width:auto;object-fit:contain;opacity:0.15;margin-bottom:12px;"/>
+              <div style="font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;opacity:0.4;">Coming Soon</div>
+            </div>
+          </div>
+          <div class="portfolio-item portfolio-carousel-box" style="aspect-ratio:unset;min-height:320px;">
+            <div class="carousel-track">
+              <div class="carousel-slide active"><img src="images/portfolio4.webp" alt="Orenzo Brand Video Editing" style="width:100%;height:100%;object-fit:cover;"/><div class="portfolio-overlay"><div class="portfolio-cat">Brand Video</div><div class="portfolio-name">Orenzo — Product Showcase</div></div></div>
+              <div class="carousel-slide"><img src="images/portfolio1.webp" alt="Chamber of Legends" style="width:100%;height:100%;object-fit:cover;"/><div class="portfolio-overlay"><div class="portfolio-cat">Video Editing</div><div class="portfolio-name">Chamber of Legends</div></div></div>
+              <div class="carousel-slide"><img src="images/portfolio2.webp" alt="Thumbnail Design" style="width:100%;height:100%;object-fit:cover;"/><div class="portfolio-overlay"><div class="portfolio-cat">Thumbnail Design</div><div class="portfolio-name">Chamber of Legends — Thumbnail</div></div></div>
+              <div class="carousel-slide"><img src="images/portfolio3.webp" alt="Motion Graphics" style="width:100%;height:100%;object-fit:cover;"/><div class="portfolio-overlay"><div class="portfolio-cat">Motion Graphics</div><div class="portfolio-name">Legends — Cinematic Title</div></div></div>
+            </div>
+            <div class="carousel-dots-auto"></div>
+            <button class="carousel-arrow carousel-prev" aria-label="Previous slide">‹</button>
+            <button class="carousel-arrow carousel-next" aria-label="Next slide">›</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials" class="padded" style="background: var(--bg2);">
+      <div class="container">
+        <div class="section-header reveal" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;">
+          <div>
+            <div class="section-index">Testimonials</div>
+            <h2 class="section-title">Client <em>Words</em></h2>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="testimonial-arrow" onclick="testimSlide(-1)">‹</button>
+            <button class="testimonial-arrow" onclick="testimSlide(1)">›</button>
+          </div>
+        </div>
+        <div class="testimonials-slider reveal" id="testimSlider">
+          <div class="testimonials-track" id="testimTrack">
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-text">"I'm truly impressed with your editing skills! The way you've used technical precision, timing, and creative effects is absolutely perfect. Each cut, transition, and visual detail reflects your professionalism and passion for your craft. The video looks polished, engaging, and impactful — far beyond my expectations."</p>
+              <div class="testimonial-author"><div class="testimonial-avatar">Y</div><div><div class="testimonial-name">Yashoda Solanki</div><div class="testimonial-role">Podcast Creator & Content Producer</div></div></div>
+            </div>
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-text">"Absolutely professional approach. He delivered the product exactly on time. Even though it was our first time working together, he never kept asking for payment during the process — he patiently waited until the work was completed and only then requested it. Highly trustworthy and reliable."</p>
+              <div class="testimonial-author"><div class="testimonial-avatar">D</div><div><div class="testimonial-name">Darshak Bhatt</div><div class="testimonial-role">Head of Operations, Axis Bank</div></div></div>
+            </div>
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-text">"Masha'Allah — Outstanding editing, clean, impactful & perfectly timed. Every second feels meaningful. Your edits are sharp, smooth, powerful & highly engaging. Truly top class work! May Allah Bless You with lots of happiness and prosperity."</p>
+              <div class="testimonial-author"><div class="testimonial-avatar">F</div><div><div class="testimonial-name">Faisal Shaikh</div><div class="testimonial-role">Content Creator</div></div></div>
+            </div>
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-text">"The level of detail and creativity in every frame is remarkable. Westcrest Media transformed our raw footage into a cinematic masterpiece. The color grading alone elevated the entire production."</p>
+              <div class="testimonial-author"><div class="testimonial-avatar">A</div><div><div class="testimonial-name">Amit Patel</div><div class="testimonial-role">Brand Director, TechStart</div></div></div>
+            </div>
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-text">"Working with Westcrest Media was a seamless experience. From the initial concept to the final delivery, the team was responsive, creative, and delivered beyond our expectations."</p>
+              <div class="testimonial-author"><div class="testimonial-avatar">S</div><div><div class="testimonial-name">Sara Khan</div><div class="testimonial-role">Marketing Lead, EcoBrand</div></div></div>
+            </div>
+            <div class="testimonial-card">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-text">"The motion graphics they created for our product launch were stunning. Our social media engagement tripled within a week of posting the video."</p>
+              <div class="testimonial-author"><div class="testimonial-avatar">R</div><div><div class="testimonial-name">Raj Mehta</div><div class="testimonial-role">CEO, NovaMedia</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:8px;margin-top:32px;" class="reveal">
+          <button class="testim-dot active" onclick="testimGoTo(0)"></button>
+          <button class="testim-dot" onclick="testimGoTo(1)"></button>
+          <button class="testim-dot" onclick="testimGoTo(2)"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-banner">
+      <div class="container">
+        <div class="reveal">
+          <h2>Ready to Work<br /><em>Together?</em></h2>
+          <p>Whether you need a video edited or just want to use our free tools — welcome.</p>
+          <div class="btn-row">
+            <a href="/#tools" class="btn-primary">Explore Free Tools</a>
+            <a href="/contact/" class="btn-ghost">Start a Project</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <div id="landing-footer"></div>
+  <script src="/assets/js/landing-footer.js"></script>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+    (function animRing(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animRing); })();
+    document.querySelectorAll('a,button').forEach(el => { el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover')); el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover')); });
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+    function openVideo(id) { window.open('https://www.youtube.com/watch?v=' + id, '_blank'); }
+    let testimSlideIndex = 0;
+    function testimSlide(dir) {
+      const track = document.getElementById('testimTrack');
+      const cards = track.children;
+      const cardWidth = cards[0].offsetWidth + 24;
+      testimSlideIndex = Math.max(0, Math.min(cards.length - 3, testimSlideIndex + dir));
+      track.style.transform = 'translateX(-' + (testimSlideIndex * cardWidth) + 'px)';
+      document.querySelectorAll('.testim-dot').forEach((d, i) => d.classList.toggle('active', i === testimSlideIndex));
+    }
+    function testimGoTo(idx) {
+      const track = document.getElementById('testimTrack');
+      const cards = track.children;
+      const cardWidth = cards[0].offsetWidth + 24;
+      testimSlideIndex = idx;
+      track.style.transform = 'translateX(-' + (testimSlideIndex * cardWidth) + 'px)';
+      document.querySelectorAll('.testim-dot').forEach((d, i) => d.classList.toggle('active', i === testimSlideIndex));
+    }
+  </script>
+
+</body>
+</html>

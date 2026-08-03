@@ -65,6 +65,8 @@
   </script>
   <link rel="icon" type="image/svg+xml" href="/images/w_logo.svg" />
   <meta name="theme-color" content="#C9A84C" />
+  <link rel="stylesheet" href="/assets/css/nav-landing.css" />
+  <link rel="stylesheet" href="/assets/css/landing-footer.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
@@ -93,54 +95,6 @@
       font-family: var(--font-sans);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
-    }
-
-    /* ─── NAVBAR ─── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      padding: 14px 60px;
-      display: flex; align-items: center; justify-content: space-between;
-      background: linear-gradient(to bottom, rgba(8,8,8,0.95) 0%, transparent 100%);
-      transition: padding 0.4s;
-    }
-    nav.scrolled { padding: 10px 60px; background: rgba(8,8,8,0.97); border-bottom: 1px solid var(--border); }
-    .nav-logo { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 0.25em; font-weight: 300; color: var(--white); text-decoration: none; line-height: 1; }
-    .nav-logo img { height: 52px; width: auto; object-fit: contain; mix-blend-mode: lighten; display: block; }
-    .nav-logo span { color: var(--gold); }
-    .nav-links { display: flex; gap: 40px; list-style: none; align-items: center; }
-    .nav-links a { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--white-dim); text-decoration: none; transition: color 0.3s; position: relative; }
-    .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--gold); transition: width 0.3s; }
-    .nav-links a:hover { color: var(--white); }
-    .nav-links a:hover::after { width: 100%; }
-    .nav-cta { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: #0a0a12 !important; background: var(--gold); padding: 10px 22px; text-decoration: none; transition: background 0.3s, transform 0.3s; font-family: var(--font-sans); }
-    .nav-cta:hover { background: var(--gold2); transform: translateY(-1px); }
-    .nav-cta::after { display: none !important; }
-    .nav-dropdown { position: relative; }
-    .nav-dropdown > a { display: flex; align-items: center; gap: 5px; }
-    .nav-dropdown > a::before { content: '▾'; font-size: 0.6rem; color: var(--gold); order: 2; transition: transform 0.3s; }
-    .nav-dropdown > a::after { display: none !important; }
-    .nav-dropdown:hover > a::before { transform: rotate(180deg); }
-    .dropdown-menu { position: absolute; top: calc(100% + 16px); left: 50%; background: rgba(17,17,24,0.98); backdrop-filter: blur(20px); border: 1px solid rgba(200,169,110,0.2); border-radius: 10px; padding: 10px; min-width: 240px; opacity: 0; visibility: hidden; transform: translateX(-50%) translateY(-8px); transition: all 0.25s ease; z-index: 200; }
-    .nav-dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-    .dropdown-menu a { display: flex !important; align-items: center; gap: 10px; padding: 10px 14px !important; border-radius: 6px; font-size: 0.72rem !important; letter-spacing: 0.08em; color: var(--white-dim) !important; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
-    .dropdown-menu a:hover { background: rgba(200,169,110,0.15); color: var(--gold) !important; }
-    .dropdown-menu a::after { display: none !important; }
-    .drop-icon-sm { font-size: 0.85rem; width: 22px; text-align: center; }
-    .dropdown-label { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); padding: 6px 14px 2px; font-family: var(--font-mono); }
-    .dropdown-divider { height: 1px; background: rgba(200,169,110,0.2); margin: 6px 10px; }
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
-    .hamburger span { display: block; width: 24px; height: 1px; background: var(--white); transition: all 0.3s; }
-    .mobile-nav { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(10,10,18,0.98); z-index: 99; flex-direction: column; align-items: center; justify-content: center; gap: 32px; }
-    .mobile-nav.open { display: flex; }
-    .mobile-nav a { font-size: 1.2rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white-dim); text-decoration: none; transition: color 0.3s; }
-    .mobile-nav a:hover { color: var(--gold); }
-    .mobile-nav-close { position: absolute; top: 20px; right: 24px; font-size: 1.5rem; color: var(--white-dim); cursor: pointer; background: none; border: none; }
-    @media (max-width: 768px) {
-      nav { padding: 10px 20px; }
-      nav.scrolled { padding: 8px 20px; }
-      .nav-links, .nav-cta { display: none; }
-      .hamburger { display: flex; }
-      .nav-logo img { height: 48px !important; }
     }
 
     /* ─── HERO BANNER ─── */
@@ -256,101 +210,23 @@
     }
     a.legal-link:hover { border-color: var(--gold); }
 
-    /* ─── FOOTER ─── */
-    .legal-footer {
-      border-top: 1px solid var(--border);
-      padding: 32px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .legal-footer-copy {
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.08em;
-      color: var(--white-dim);
-    }
-    .legal-footer-links {
-      display: flex; gap: 10px; align-items: center;
-    }
-    .legal-footer-links a {
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.08em;
-      color: var(--white-dim);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    .legal-footer-links a:hover { color: var(--gold); }
-    .legal-footer-links a.active { color: var(--gold); }
-    .legal-footer-links span { color: rgba(245,240,232,0.2); font-size: 0.5rem; }
-
     @media (max-width: 600px) {
-      nav { padding: 0 20px; }
       .legal-hero { padding: 60px 20px 36px; }
       .legal-wrap { padding: 48px 20px 80px; }
-      .legal-footer { flex-direction: column; text-align: center; padding: 28px 20px; }
-      .legal-footer-links { justify-content: center; flex-wrap: wrap; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <nav id="navbar">
-    <a href="/" class="nav-logo">
-      <img src="/images/logo.png" alt="Westcrest Media" />
-    </a>
-    <ul class="nav-links">
-      <li class="nav-dropdown"><a href="/#tools">Tools</a>
-        <div class="dropdown-menu">
-          <div class="dropdown-label">Image Tools</div>
-          <a href="/tools/image-converter/"><span class="drop-icon-sm">🖼️</span>Image Converter</a>
-          <a href="/tools/image-compressor/"><span class="drop-icon-sm">⚡</span>Image Compressor</a>
-          <a href="/tools/background-remover/"><span class="drop-icon-sm">✂️</span>Background Remover</a>
-          <a href="/tools/color-palette/"><span class="drop-icon-sm">🎨</span>Color Palette Generator</a>
-          <div class="dropdown-divider"></div>
-          <div class="dropdown-label">Video Tools</div>
-          <a href="/tools/thumbnail-maker/"><span class="drop-icon-sm">🎬</span>Thumbnail Maker</a>
-          <a href="/tools/lut-preview/"><span class="drop-icon-sm">🎞️</span>LUT Preview Tool</a>
-          <a href="/tools/aspect-ratio/"><span class="drop-icon-sm">📐</span>Aspect Ratio Calculator</a>
-          <div class="dropdown-divider"></div>
-          <div class="dropdown-label">AI Prompt Tools</div>
-          <a href="/tools/image-prompt/"><span class="drop-icon-sm">&#127924;</span>Image Prompt Generator</a>
-          <a href="/tools/video-prompt/"><span class="drop-icon-sm">🎥</span>Video Prompt Generator</a>
-          <div class="dropdown-divider"></div>
-          <a href="/tools/font-pairing/"><span class="drop-icon-sm">🔤</span>Font Pairing Tool</a>
-          <a href="/tools/png-to-pdf.html"><span class="drop-icon-sm">📄</span>PNG to PDF</a>
-        </div>
-      </li>
-      <li><a href="/#services">Services</a></li>
-      <li><a href="/#portfolio">Portfolio</a></li>
-      <li><a href="/#shop">Shop</a></li>
-      <li><a href="/#process">Process</a></li>
-      <li><a href="/about/">About</a></li>
-      <li><a href="/blog/">Blog</a></li>
-      <li><a href="/#contact">Contact</a></li>
-    </ul>
-    <a href="/#contact" class="nav-cta">Start a Project</a>
-    <div class="hamburger" id="hamburger" onclick="toggleMobile()">
-      <span></span><span></span><span></span>
-    </div>
-  </nav>
-
-  <!-- MOBILE NAV -->
-  <div class="mobile-nav" id="mobileNav">
-    <button class="mobile-nav-close" onclick="toggleMobile()">✕</button>
-    <a href="/#tools" onclick="toggleMobile()">Tools</a>
-    <a href="/#services" onclick="toggleMobile()">Services</a>
-    <a href="/#portfolio" onclick="toggleMobile()">Portfolio</a>
-    <a href="/#shop" onclick="toggleMobile()">Shop</a>
-    <a href="/#process" onclick="toggleMobile()">Process</a>
-    <a href="/about/" onclick="toggleMobile()">About</a>
-    <a href="/blog/" onclick="toggleMobile()">Blog</a>
-    <a href="/#contact" onclick="toggleMobile()">Contact</a>
+  <!-- CURSOR -->
+  <div id="cursor">
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
   </div>
+
+  <!-- HEADER -->
+  <nav id="navbar"></nav>
+  <script type="module" src="/assets/js/header-landing.js"></script>
 
   <!-- HERO -->
   <div class="legal-hero">
@@ -365,7 +241,7 @@
 
     <div class="legal-section">
       <div class="legal-highlight">
-        <p>This Privacy Policy explains how Westcrest Media ("we", "us", or "our") collects, uses, and protects information when you visit <strong style="color:var(--white);">westcrestmedia.in</strong> or use our free web-based tools. By using this website, you agree to the practices described below.</p>
+        <p>This Privacy Policy explains how Westcrest Media ("we", "us", or "our") collects, uses, and protects information when you visit <strong style="color:var(--white);">westcrestmedia.in</strong> or use our free web based tools. By using this website, you agree to the practices described below.</p>
       </div>
     </div>
 
@@ -374,7 +250,7 @@
       <h3>Information You Provide</h3>
       <p>When you contact us through our contact form or email, we collect your name, email address, and the content of your message. We use this solely to respond to your enquiry.</p>
       <h3>Automatically Collected Information</h3>
-      <p>When you visit our website, certain information is collected automatically through third-party services including:</p>
+      <p>When you visit our website, certain information is collected automatically through third party services including:</p>
       <ul>
         <li>Browser type, device type, and operating system</li>
         <li>Pages visited, time spent on pages, and referring URLs</li>
@@ -405,14 +281,14 @@
         <li>You may also opt out via <a class="legal-link" href="https://www.aboutads.info" target="_blank" rel="noopener">www.aboutads.info</a></li>
         <li>For more information, visit <a class="legal-link" href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener">Google's advertising policy</a></li>
       </ul>
-      <p>Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to our website. These cookies do not collect personally identifiable information.</p>
+      <p>Third party vendors, including Google, use cookies to serve ads based on a user's prior visits to our website. These cookies do not collect personally identifiable information.</p>
     </div>
 
     <div class="legal-section">
       <h2>4. Google Analytics</h2>
       <p>We use Google Analytics to understand how visitors use our website. Google Analytics collects information such as how often users visit the site, what pages they visit, and what other sites they used prior to coming to our site. We use this information solely to improve our website and services.</p>
       <p>Google Analytics collects only the IP address assigned to you on the date you visit this site, not your name or other identifying information. We do not combine the information collected through Google Analytics with personally identifiable information.</p>
-      <p>You can prevent Google Analytics from recognising you on return visits by <a class="legal-link" href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">downloading and installing the Google Analytics Opt-out Browser Add-on</a>.</p>
+      <p>You can prevent Google Analytics from recognising you on return visits by <a class="legal-link" href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">downloading and installing the Google Analytics Opt out Browser Add on</a>.</p>
     </div>
 
     <div class="legal-section">
@@ -428,12 +304,12 @@
 
     <div class="legal-section">
       <h2>6. Free Tools</h2>
-      <p>Westcrest Media provides several free web-based tools including a Color Palette Generator, Image Prompt Generator, Font Pairing Tool, Aspect Ratio Calculator, Background Remover, and others. These tools operate primarily in your browser. Some AI-powered tools may send content to third-party AI APIs for processing. We do not store or log the content you input into our tools beyond the duration of your session.</p>
+      <p>Westcrest Media provides several free web based tools including a Color Palette Generator, Image Prompt Generator, Font Pairing Tool, Aspect Ratio Calculator, Background Remover, and others. These tools operate primarily in your browser. Some AI powered tools may send content to third party AI APIs for processing. We do not store or log the content you input into our tools beyond the duration of your session.</p>
     </div>
 
     <div class="legal-section">
-      <h2>7. Third-Party Links</h2>
-      <p>Our website may contain links to third-party websites including our Gumroad store, social media platforms, and YouTube channel. We are not responsible for the privacy practices or content of those websites. We encourage you to review the privacy policies of any third-party sites you visit.</p>
+      <h2>7. Third Party Links</h2>
+      <p>Our website may contain links to third party websites including our Gumroad store, social media platforms, and YouTube channel. We are not responsible for the privacy practices or content of those websites. We encourage you to review the privacy policies of any third party sites you visit.</p>
     </div>
 
     <div class="legal-section">
@@ -475,28 +351,22 @@
       </div>
     </div>
 
-  </div>
+</div>
 
   <!-- FOOTER -->
-  <footer class="legal-footer">
-    <div class="legal-footer-copy">© 2025 Westcrest Media. All rights reserved.</div>
-    <div class="legal-footer-links">
-      <a href="/privacy-policy/" class="active">Privacy Policy</a>
-      <span>|</span>
-      <a href="/terms/">Terms &amp; Conditions</a>
-      <span>|</span>
-      <a href="/disclaimer/">Disclaimer</a>
-    </div>
-  </footer>
+  <div id="landing-footer"></div>
+  <script src="/assets/js/landing-footer.js"></script>
 
   <script>
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 50);
-    });
-    function toggleMobile() {
-      document.getElementById('mobileNav').classList.toggle('open');
-    }
+    // CURSOR
+    const cursor = document.getElementById('cursor');
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+    (function animRing(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animRing); })();
+    document.querySelectorAll('a,button').forEach(el => { el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover')); el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover')); });
+
   </script>
 
 </body>

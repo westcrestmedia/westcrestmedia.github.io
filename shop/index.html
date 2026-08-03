@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop — Westcrest Media | Plugins, LUTs & Digital Products</title>
+  <meta name="description" content="Download professional-grade presets, plugins, LUTs, and project files from Westcrest Media. Instant access, lifetime updates." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://westcrestmedia.in/shop/" />
+  <link rel="alternate" hreflang="en" href="https://westcrestmedia.in/shop/" />
+  <link rel="alternate" hreflang="x-default" href="https://westcrestmedia.in/shop/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://westcrestmedia.in/shop/" />
+  <meta property="og:title" content="Shop — Westcrest Media | Plugins & Digital Products" />
+  <meta property="og:description" content="Download professional-grade presets, plugins, LUTs, and project files. Instant access, lifetime updates." />
+  <meta property="og:image" content="https://westcrestmedia.in/images/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:site_name" content="Westcrest Media" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Shop — Westcrest Media" />
+  <meta name="twitter:description" content="Professional presets, plugins, LUTs and project files for video editors and creators." />
+  <meta name="twitter:image" content="https://westcrestmedia.in/images/og-image.jpg" />
+  <meta name="theme-color" content="#C9A84C" />
+  <link rel="icon" type="image/svg+xml" href="/images/w_logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/nav-landing.css" />
+  <link rel="stylesheet" href="/assets/css/landing-footer.css" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #111118; --bg2: #16161e; --bg3: #1c1c26; --surface: #1e1e28;
+      --border: rgba(255,255,255,0.10);
+      --gold: #c8a96e; --gold2: #e8c98e; --gold-dim: rgba(200,169,110,0.15);
+      --white: #f5f0e8; --white-dim: rgba(245,240,232,0.55); --white-faint: rgba(245,240,232,0.12);
+      --font-display: 'Cormorant Garamond', serif;
+      --font-sans: 'Syne', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--white); font-family: var(--font-sans); overflow-x: hidden; cursor: none; }
+    body::before { content:''; position:fixed; inset:0; z-index:1; pointer-events:none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"); opacity: 0.025; }
+    #cursor { position:fixed; top:0; left:0; z-index:9999; pointer-events:none; mix-blend-mode:difference; }
+    #cursor-dot { width:8px; height:8px; border-radius:50%; background:var(--gold); position:absolute; transform:translate(-50%,-50%); transition:transform 0.1s,width 0.2s,height 0.2s; }
+    #cursor-ring { width:36px; height:36px; border-radius:50%; border:1px solid rgba(200,169,110,0.5); position:absolute; transform:translate(-50%,-50%); transition:transform 0.18s cubic-bezier(.25,.46,.45,.94),width 0.3s,height 0.3s,border-color 0.3s; }
+    ::-webkit-scrollbar { width:3px; } ::-webkit-scrollbar-track { background:var(--bg); } ::-webkit-scrollbar-thumb { background:var(--gold); border-radius:2px; }
+    .container { max-width:1260px; margin:0 auto; padding:0 60px; }
+    .padded { padding:120px 0; }
+    .section-header { margin-bottom:80px; }
+    .section-index { font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.3em; color:var(--gold); text-transform:uppercase; margin-bottom:12px; }
+    .section-title { font-family:var(--font-display); font-size:clamp(2.8rem,5vw,5rem); font-weight:300; line-height:1.05; color:var(--white); }
+    .section-title em { font-style:italic; color:var(--gold); }
+    .section-desc { margin-top:20px; max-width:520px; font-size:0.82rem; line-height:1.9; color:var(--white-dim); letter-spacing:0.02em; }
+    .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.8s ease,transform 0.8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; } .reveal-delay-4 { transition-delay:0.4s; }
+    .shop-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; }
+    .shop-card { background:var(--surface); border:1px solid var(--border); overflow:hidden; transition:transform 0.3s; position:relative; }
+    .shop-card:hover { transform:translateY(-6px); box-shadow:0 24px 60px rgba(0,0,0,0.5); }
+    .shop-img { aspect-ratio:4/3; background:var(--bg3); display:flex; align-items:center; justify-content:center; font-size:3rem; border-bottom:1px solid var(--border); overflow:hidden; position:relative; }
+    .shop-img-label { position:absolute; top:12px; left:12px; font-size:0.5rem; letter-spacing:0.2em; text-transform:uppercase; background:var(--gold); color:var(--bg); padding:4px 10px; font-weight:600; }
+    .shop-body { padding:24px; }
+    .shop-cat { font-size:0.55rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+    .shop-name { font-family:var(--font-display); font-size:1.2rem; font-weight:300; margin-bottom:10px; }
+    .shop-price-row { display:flex; align-items:center; justify-content:space-between; margin-top:16px; }
+    .shop-price { font-family:var(--font-mono); font-size:1rem; color:var(--gold); }
+    .shop-price del { color:var(--white-dim); font-size:0.75rem; margin-right:6px; }
+    .btn-buy { font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; background:transparent; border:1px solid var(--gold); color:var(--gold); padding:8px 16px; cursor:pointer; font-family:var(--font-sans); transition:background 0.3s,color 0.3s; }
+    .btn-buy:hover { background:var(--gold); color:var(--bg); }
+    .cta-banner { text-align:center; padding:100px 0; background:var(--bg2); }
+    .cta-banner h2 { font-family:var(--font-display); font-size:clamp(2.5rem,5vw,4.5rem); font-weight:300; margin-bottom:24px; }
+    .cta-banner h2 em { font-style:italic; color:var(--gold); }
+    .cta-banner p { font-size:0.82rem; color:var(--white-dim); letter-spacing:0.08em; margin-bottom:48px; }
+    .btn-row { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+    .btn-primary { display:inline-block; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; background:var(--gold); color:#0a0a12; padding:16px 36px; text-decoration:none; font-family:var(--font-sans); font-weight:600; transition:background 0.3s,transform 0.2s; }
+    .btn-primary:hover { background:var(--gold2); transform:translateY(-2px); }
+    .btn-ghost { display:inline-block; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; background:transparent; color:var(--gold); border:1px solid var(--gold); padding:15px 36px; text-decoration:none; font-family:var(--font-sans); transition:background 0.3s,color 0.3s,transform 0.2s; }
+    .btn-ghost:hover { background:var(--gold); color:#0a0a12; transform:translateY(-2px); }
+    @media(max-width:1100px) { .shop-grid { grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:900px) { .container { padding:0 30px; } .padded { padding:80px 0; } .shop-grid { grid-template-columns:1fr; } }
+    @media(max-width:600px) { .container { padding:0 20px; } .padded { padding:60px 0; } .shop-card { padding:16px; } }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR -->
+  <div id="cursor"><div id="cursor-dot"></div><div id="cursor-ring"></div></div>
+
+  <!-- HEADER -->
+  <nav id="navbar"></nav>
+  <script type="module" src="/assets/js/header-landing.js"></script>
+
+  <main>
+
+    <!-- PAGE HERO -->
+    <section class="padded" style="background:var(--bg2);">
+      <div class="container">
+        <div class="section-header reveal" style="text-align:center;">
+          <div class="section-index">Shop</div>
+          <h2 class="section-title">Plugins &amp; <em>Products</em></h2>
+          <p style="color:var(--white-dim);font-size:0.85rem;letter-spacing:0.08em;margin-top:12px;max-width:500px;margin-left:auto;margin-right:auto;">Professional grade presets, plugins, LUTs, and project files used in real productions. Instant access, lifetime updates.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOP GRID -->
+    <section id="shop" class="padded" style="background: var(--bg2);">
+      <div class="container">
+        <div class="shop-grid">
+          <div class="shop-card reveal reveal-delay-1">
+            <div class="shop-img">
+              <div style="font-size:3rem">🎞️</div>
+              <span class="shop-img-label">Bestseller</span>
+            </div>
+            <div class="shop-body">
+              <div class="shop-cat">After Effects Plugin</div>
+              <div class="shop-name">CinemaFlow AE Pack</div>
+              <p style="font-size:0.72rem; color:var(--white-dim); line-height:1.7; margin-top:8px;">50+ professional transitions, overlays, and animation presets for After Effects.</p>
+              <div class="shop-price-row">
+                <div class="shop-price"><del>$79</del> $49</div>
+                <button class="btn-buy" onclick="addToCart('CinemaFlow AE Pack')">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+          <div class="shop-card reveal reveal-delay-2">
+            <div class="shop-img">
+              <div style="font-size:3rem">🎨</div>
+              <span class="shop-img-label">New</span>
+            </div>
+            <div class="shop-body">
+              <div class="shop-cat">DaVinci LUT Pack</div>
+              <div class="shop-name">Westcrest Cinematic LUTs</div>
+              <p style="font-size:0.72rem; color:var(--white-dim); line-height:1.7; margin-top:8px;">30 handcrafted cinematic LUTs for DaVinci Resolve, Premiere, and FCPX.</p>
+              <div class="shop-price-row">
+                <div class="shop-price">$29</div>
+                <button class="btn-buy" onclick="addToCart('Cinematic LUTs')">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+          <div class="shop-card reveal reveal-delay-3">
+            <div class="shop-img">
+              <div style="font-size:3rem">📄</div>
+            </div>
+            <div class="shop-body">
+              <div class="shop-cat">Premiere Pro Project</div>
+              <div class="shop-name">Luxury Brand Video Kit</div>
+              <p style="font-size:0.72rem; color:var(--white-dim); line-height:1.7; margin-top:8px;">Complete Premiere Pro project file with editable templates for brand videos.</p>
+              <div class="shop-price-row">
+                <div class="shop-price"><del>$59</del> $39</div>
+                <button class="btn-buy" onclick="addToCart('Brand Video Kit')">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+          <div class="shop-card reveal reveal-delay-4">
+            <div class="shop-img">
+              <div style="font-size:3rem">📦</div>
+              <span class="shop-img-label">Bundle</span>
+            </div>
+            <div class="shop-body">
+              <div class="shop-cat">Full Bundle</div>
+              <div class="shop-name">Creator Pro Bundle</div>
+              <p style="font-size:0.72rem; color:var(--white-dim); line-height:1.7; margin-top:8px;">Everything in one — AE Pack, LUTs, Premiere projects + exclusive bonuses.</p>
+              <div class="shop-price-row">
+                <div class="shop-price"><del>$167</del> $97</div>
+                <button class="btn-buy" onclick="addToCart('Creator Pro Bundle')">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-banner">
+      <div class="container">
+        <div class="reveal">
+          <h2>Ready to Work<br /><em>Together?</em></h2>
+          <p>Whether you need a video edited or just want to use our free tools — welcome.</p>
+          <div class="btn-row">
+            <a href="/#tools" class="btn-primary">Explore Free Tools</a>
+            <a href="/#contact" class="btn-ghost">Start a Project</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <div id="landing-footer"></div>
+  <script src="/assets/js/landing-footer.js"></script>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+    (function animRing(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animRing); })();
+    document.querySelectorAll('a,button').forEach(el => { el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover')); el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover')); });
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+    function addToCart(name) { alert(name + ' added to cart!'); }
+  </script>
+
+</body>
+</html>

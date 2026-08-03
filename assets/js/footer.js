@@ -20,7 +20,9 @@
     <p>© ${new Date().getFullYear()} Westcrest Media</p>
     <div class="footer-links">
       <a href="https://westcrestmedia.in/">Home</a>
-      <a href="https://westcrestmedia.in/#tools">All Tools</a>
+      <a href="https://westcrestmedia.in/services/">Services</a>
+      <a href="https://westcrestmedia.in/portfolio/">Portfolio</a>
+      <a href="https://westcrestmedia.in/shop/">Shop</a>
       <a href="https://westcrestmedia.in/#contact">Contact</a>
     </div>
   `;

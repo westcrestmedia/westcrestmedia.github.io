@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Services — Westcrest Media | Video Editing & Motion Graphics</title>
+  <meta name="description" content="Professional video editing, motion graphics, color grading, After Effects VFX, sound design and brand video packages by Westcrest Media. Serving USA, UK, Canada & worldwide." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://westcrestmedia.in/services/" />
+  <link rel="alternate" hreflang="en" href="https://westcrestmedia.in/services/" />
+  <link rel="alternate" hreflang="x-default" href="https://westcrestmedia.in/services/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://westcrestmedia.in/services/" />
+  <meta property="og:title" content="Our Services — Westcrest Media | Video Editing & Motion Graphics" />
+  <meta property="og:description" content="Professional video editing, motion graphics, color grading, VFX, sound design and brand video packages by Westcrest Media." />
+  <meta property="og:image" content="https://westcrestmedia.in/images/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:site_name" content="Westcrest Media" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Our Services — Westcrest Media" />
+  <meta name="twitter:description" content="Professional video editing, motion graphics, color grading, VFX, sound design and brand video packages by Westcrest Media." />
+  <meta name="twitter:image" content="https://westcrestmedia.in/images/og-image.jpg" />
+  <meta name="theme-color" content="#C9A84C" />
+  <link rel="icon" type="image/svg+xml" href="/images/w_logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/nav-landing.css" />
+  <link rel="stylesheet" href="/assets/css/landing-footer.css" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #111118; --bg2: #16161e; --bg3: #1c1c26; --surface: #1e1e28;
+      --border: rgba(255,255,255,0.10);
+      --gold: #c8a96e; --gold2: #e8c98e; --gold-dim: rgba(200,169,110,0.15);
+      --white: #f5f0e8; --white-dim: rgba(245,240,232,0.55); --white-faint: rgba(245,240,232,0.12);
+      --font-display: 'Cormorant Garamond', serif;
+      --font-sans: 'Syne', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--white); font-family: var(--font-sans); overflow-x: hidden; cursor: none; }
+    body::before { content:''; position:fixed; inset:0; z-index:1; pointer-events:none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"); opacity: 0.025; }
+    #cursor { position:fixed; top:0; left:0; z-index:9999; pointer-events:none; mix-blend-mode:difference; }
+    #cursor-dot { width:8px; height:8px; border-radius:50%; background:var(--gold); position:absolute; transform:translate(-50%,-50%); transition:transform 0.1s,width 0.2s,height 0.2s; }
+    #cursor-ring { width:36px; height:36px; border-radius:50%; border:1px solid rgba(200,169,110,0.5); position:absolute; transform:translate(-50%,-50%); transition:transform 0.18s cubic-bezier(.25,.46,.45,.94),width 0.3s,height 0.3s,border-color 0.3s; }
+    ::-webkit-scrollbar { width:3px; } ::-webkit-scrollbar-track { background:var(--bg); } ::-webkit-scrollbar-thumb { background:var(--gold); border-radius:2px; }
+    .container { max-width:1260px; margin:0 auto; padding:0 60px; }
+    .padded { padding:120px 0; }
+    .section-header { margin-bottom:80px; }
+    .section-index { font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.3em; color:var(--gold); text-transform:uppercase; margin-bottom:12px; }
+    .section-title { font-family:var(--font-display); font-size:clamp(2.8rem,5vw,5rem); font-weight:300; line-height:1.05; color:var(--white); }
+    .section-title em { font-style:italic; color:var(--gold); }
+    .section-desc { margin-top:20px; max-width:520px; font-size:0.82rem; line-height:1.9; color:var(--white-dim); letter-spacing:0.02em; }
+    .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.8s ease,transform 0.8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; }
+    .services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+    .service-card { background:var(--surface); padding:52px 44px; position:relative; overflow:hidden; border:1px solid var(--border); transition:transform 0.4s cubic-bezier(.25,.46,.45,.94); }
+    .service-card:hover { transform:translateY(-4px); }
+    .service-num { font-family:var(--font-mono); font-size:0.55rem; letter-spacing:0.3em; color:var(--gold); margin-bottom:32px; }
+    .service-icon { font-size:2rem; margin-bottom:24px; }
+    .service-name { font-family:var(--font-display); font-size:1.7rem; font-weight:300; color:var(--white); margin-bottom:16px; line-height:1.2; }
+    .service-desc { font-size:0.78rem; line-height:1.85; color:var(--white-dim); margin-bottom:32px; }
+    .service-link { font-size:0.6rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); text-decoration:none; display:flex; align-items:center; gap:10px; transition:gap 0.3s; position:relative; z-index:2; cursor:pointer; }
+    .service-link:hover { gap:18px; }
+    .service-link::after { content:'→'; }
+    .cta-banner { text-align:center; padding:100px 0; background:var(--bg2); }
+    .cta-banner h2 { font-family:var(--font-display); font-size:clamp(2.5rem,5vw,4.5rem); font-weight:300; margin-bottom:24px; }
+    .cta-banner h2 em { font-style:italic; color:var(--gold); }
+    .cta-banner p { font-size:0.82rem; color:var(--white-dim); letter-spacing:0.08em; margin-bottom:48px; }
+    .btn-row { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+    .btn-primary { display:inline-block; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; background:var(--gold); color:#0a0a12; padding:16px 36px; text-decoration:none; font-family:var(--font-sans); font-weight:600; transition:background 0.3s,transform 0.2s; }
+    .btn-primary:hover { background:var(--gold2); transform:translateY(-2px); }
+    .btn-ghost { display:inline-block; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; background:transparent; color:var(--gold); border:1px solid var(--gold); padding:15px 36px; text-decoration:none; font-family:var(--font-sans); transition:background 0.3s,color 0.3s,transform 0.2s; }
+    .btn-ghost:hover { background:var(--gold); color:#0a0a12; transform:translateY(-2px); }
+    @media(max-width:1100px) { .services-grid { grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:900px) { .container { padding:0 30px; } .padded { padding:80px 0; } .services-grid { grid-template-columns:1fr; } }
+    @media(max-width:600px) { .container { padding:0 20px; } .padded { padding:60px 0; } .service-card { padding:36px 24px; } }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR -->
+  <div id="cursor"><div id="cursor-dot"></div><div id="cursor-ring"></div></div>
+
+  <!-- HEADER -->
+  <nav id="navbar"></nav>
+  <script type="module" src="/assets/js/header-landing.js"></script>
+
+  <main>
+
+    <!-- PAGE HERO -->
+    <section class="padded" style="background:var(--bg2);">
+      <div class="container">
+        <div class="section-header reveal" style="text-align:center;">
+          <div class="section-index">Services</div>
+          <h2 class="section-title">Our <em>Services</em></h2>
+          <p style="color:var(--white-dim);font-size:0.85rem;letter-spacing:0.08em;margin-top:12px;max-width:500px;margin-left:auto;margin-right:auto;">Professional video editing, motion graphics, color grading and VFX — crafted for creators and brands worldwide.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES GRID -->
+    <section id="services" class="padded" style="background: var(--bg3);">
+      <div class="container">
+        <div class="services-grid">
+          <div class="service-card reveal reveal-delay-1">
+            <div class="service-icon">🎬</div>
+            <h3 class="service-name">Video Editing</h3>
+            <p class="service-desc">Professional editing for commercials, short films, YouTube channels, social reels, and corporate content. Every cut is deliberate, every moment crafted.</p>
+            <a href="#contact" class="service-link">Enquire Now</a>
+          </div>
+          <div class="service-card reveal reveal-delay-2">
+            <div class="service-icon">✨</div>
+            <h3 class="service-name">Motion Graphics</h3>
+            <p class="service-desc">Animated logos, kinetic typography, explainer animations, and broadcast ready graphics. We turn your ideas into fluid, breathtaking motion.</p>
+            <a href="#contact" class="service-link">Enquire Now</a>
+          </div>
+          <div class="service-card reveal reveal-delay-3">
+            <div class="service-icon">🎨</div>
+            <h3 class="service-name">Color Grading</h3>
+            <p class="service-desc">Cinematic color grading and LUT creation to give your footage a signature look. DaVinci Resolve specialist with a trained colorist's eye.</p>
+            <a href="#contact" class="service-link">Enquire Now</a>
+          </div>
+          <div class="service-card reveal reveal-delay-1">
+            <div class="service-icon">⚡</div>
+            <h3 class="service-name">After Effects VFX</h3>
+            <p class="service-desc">Visual effects, compositing, and dynamic animations built in After Effects. From subtle enhancements to full cinematic VFX sequences.</p>
+            <a href="#contact" class="service-link">Enquire Now</a>
+          </div>
+          <div class="service-card reveal reveal-delay-2">
+            <div class="service-icon">🔊</div>
+            <h3 class="service-name">Sound Design</h3>
+            <p class="service-desc">Audio mixing, SFX layering, and music synchronization to give your video the emotional depth it deserves. Sound is half the experience.</p>
+            <a href="#contact" class="service-link">Enquire Now</a>
+          </div>
+          <div class="service-card reveal reveal-delay-3">
+            <div class="service-icon">📦</div>
+            <h3 class="service-name">Brand Video Packages</h3>
+            <p class="service-desc">Complete video branding suites including intro/outro animations, lower thirds, overlays, and reusable template kits for your brand identity.</p>
+            <a href="#contact" class="service-link">Enquire Now</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-banner">
+      <div class="container">
+        <div class="reveal">
+          <h2>Ready to Work<br /><em>Together?</em></h2>
+          <p>Whether you need a video edited or just want to use our free tools — welcome.</p>
+          <div class="btn-row">
+            <a href="/#tools" class="btn-primary">Explore Free Tools</a>
+            <a href="/#contact" class="btn-ghost">Start a Project</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <div id="landing-footer"></div>
+  <script src="/assets/js/landing-footer.js"></script>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+    (function animRing(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animRing); })();
+    document.querySelectorAll('a,button').forEach(el => { el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover')); el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover')); });
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

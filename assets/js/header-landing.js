@@ -42,9 +42,9 @@ function renderNav(user) {
           </div>
         </div>
       </li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#portfolio">Portfolio</a></li>
-      <li><a href="#shop">Shop</a></li>
+      <li><a href="/services/">Services</a></li>
+      <li><a href="/portfolio/">Portfolio</a></li>
+      <li><a href="/shop/">Shop</a></li>
       <li><a href="#process">Process</a></li>
       <li><a href="/about/">About</a></li>
       <li><a href="/blog/">Blog</a></li>
