@@ -1,0 +1,99 @@
+/**
+ * wm-studio.css — Shared control styles for Westcrest Media canvas tools.
+ * Used together with /assets/js/wm-studio.js by:
+ *   - /tools/background-remover/
+ *   - /tools/photo-editor-pro/
+ *
+ * Requires CSS vars from global.css (or an equivalent :root block):
+ *   --dark-2 --dark-3 --dark-4 --dark-5, --gold --gold-dim --gold-border,
+ *   --faint --text --text-muted, --radius --radius-sm
+ */
+
+/* ── BG SWATCHES ── */
+.swatch-row{display:flex;flex-wrap:wrap;gap:5px;align-items:center;}
+.swatch{width:22px;height:22px;border-radius:5px;cursor:pointer;border:2px solid transparent;transition:border-color .15s;flex-shrink:0;}
+.swatch.active{border-color:var(--gold);}
+.swatch.transparent-swatch{background-image:linear-gradient(45deg,#555 25%,transparent 25%),linear-gradient(-45deg,#555 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#555 75%),linear-gradient(-45deg,transparent 75%,#555 75%);background-size:6px 6px;background-position:0 0,0 3px,3px -3px,-3px 0;background-color:#333;}
+.color-input-wrap{display:flex;align-items:center;gap:5px;}
+.color-input-wrap input[type=color]{width:26px;height:26px;border:2px solid var(--faint);border-radius:5px;cursor:pointer;padding:0;background:none;}
+.color-input-wrap input[type=color]::-webkit-color-swatch-wrapper{padding:2px;}
+.color-input-wrap input[type=color]::-webkit-color-swatch{border:none;border-radius:3px;}
+.hex-input{width:72px;background:var(--dark-4);border:1.5px solid var(--faint);color:var(--text);font-family:'DM Mono',monospace;font-size:11px;padding:4px 7px;border-radius:var(--radius-sm);outline:none;}
+.hex-input:focus{border-color:var(--gold-border);}
+
+/* ── PHOTO SEARCH ── */
+.photo-search-row{display:flex;gap:6px;}
+.photo-search-row input{flex:1;background:var(--dark-4);border:1.5px solid var(--faint);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;padding:6px 10px;border-radius:var(--radius-sm);outline:none;}
+.photo-search-row input:focus{border-color:var(--gold-border);}
+.photo-search-row button{background:var(--gold-dim);border:1.5px solid var(--gold-border);color:var(--gold);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;padding:6px 12px;border-radius:var(--radius-sm);cursor:pointer;white-space:nowrap;}
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;max-height:360px;overflow-y:auto;margin-top:4px;}
+.photo-grid::-webkit-scrollbar{width:4px;}
+.photo-grid::-webkit-scrollbar-track{background:var(--dark-3);}
+.photo-grid::-webkit-scrollbar-thumb{background:var(--gold-border);border-radius:2px;}
+.photo-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:5px;cursor:pointer;border:2px solid transparent;transition:border-color .15s;}
+.photo-thumb:hover{border-color:var(--gold-border);}
+.photo-thumb.active{border-color:var(--gold);}
+.photo-loading{text-align:center;padding:1rem;font-size:12px;color:var(--text-muted);}
+.photo-attribution{font-size:10px;color:var(--text-muted);opacity:.5;text-align:right;}
+.photo-attribution a{color:var(--gold);text-decoration:none;}
+
+/* ── CHECKERBOARD VIEWPORT ── */
+.checker-bg-vp{background-image:linear-gradient(45deg,#2a2a2a 25%,transparent 25%),linear-gradient(-45deg,#2a2a2a 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#2a2a2a 75%),linear-gradient(-45deg,transparent 75%,#2a2a2a 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0;background-color:#1a1a1a;}
+
+/* ── FORM ROWS / SLIDERS ── */
+.form-row{display:flex;align-items:center;gap:8px;}
+.form-label{font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--text-muted);white-space:nowrap;min-width:52px;}
+.form-label.wide{min-width:68px;}
+.slider-wrap{display:flex;align-items:center;gap:6px;flex:1;}
+.slider-wrap input[type=range]{flex:1;height:3px;-webkit-appearance:none;appearance:none;background:var(--dark-5);border-radius:99px;outline:none;cursor:pointer;}
+.slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--gold);cursor:pointer;border:none;}
+.slider-val{font-size:11px;color:var(--text-muted);min-width:34px;text-align:right;font-family:'DM Mono',monospace;}
+
+/* ── EDITABLE SLIDER VALUE (number input replacing plain span) ── */
+input.slider-val-input{
+  font-size:11px;color:var(--text);min-width:38px;max-width:50px;text-align:right;
+  font-family:'DM Mono',monospace;background:var(--dark-4);border:1.5px solid var(--faint);
+  border-radius:4px;padding:2px 4px;outline:none;-moz-appearance:textfield;
+  transition:border-color .15s;
+}
+input.slider-val-input::-webkit-outer-spin-button,
+input.slider-val-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+input.slider-val-input:focus{border-color:var(--gold-border);color:var(--gold);}
+.slider-val-unit{font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;margin-left:-2px;flex-shrink:0;}
+
+/* ── MINI PER-SLIDER RESET BUTTON ── */
+.slider-mini-reset{
+  flex-shrink:0;width:18px;height:18px;display:flex;align-items:center;justify-content:center;
+  background:transparent;border:none;color:var(--text-muted);font-size:12px;cursor:pointer;
+  border-radius:4px;transition:all .15s;padding:0;line-height:1;opacity:.6;
+}
+.slider-mini-reset:hover{opacity:1;color:var(--gold);background:var(--dark-4);}
+.slider-mini-reset:active{transform:scale(0.9);}
+
+/* ── EFFECTS SUB-SECTIONS ── */
+.fx-sub-header{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--faint);font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);transition:color .18s;user-select:none;}
+.fx-sub-header:hover{color:var(--text);}
+.fx-sub-arrow{font-size:11px;color:var(--text-muted);transition:transform .2s;}
+.fx-sub-body{padding:10px 14px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--faint);}
+.fx-sub-body.collapsed{display:none;}
+
+/* ── EFFECT TOGGLE CHECKBOX ── */
+.effect-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:11px;color:var(--text-muted);font-weight:600;}
+.effect-toggle input{accent-color:var(--gold);width:15px;height:15px;cursor:pointer;}
+
+/* ── EDITOR 3-COLUMN GRID (left controls | canvas | right effects) ── */
+.editor-wrap{display:grid;grid-template-columns:300px 1fr 300px;gap:1rem;margin-bottom:1rem;align-items:stretch;}
+@media(max-width:1400px){.editor-wrap{grid-template-columns:260px 1fr 260px;}}
+@media(max-width:1100px){.editor-wrap{grid-template-columns:220px 1fr 220px;}}
+@media(max-width:900px){.editor-wrap{grid-template-columns:1fr;}}
+.sidebar-left,.sidebar-right{display:flex;flex-direction:column;gap:.75rem;overflow-y:auto;max-height:80vh;}
+@media(max-width:900px){.sidebar-left,.sidebar-right{overflow:visible;max-height:none;}}
+
+/* ── COLLAPSIBLE PANELS ── */
+.panel{background:var(--dark-2);border:1px solid var(--gold-border);border-radius:var(--radius);overflow:hidden;}
+.panel-header{padding:10px 14px;border-bottom:1px solid var(--faint);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.panel-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);}
+.panel-toggle{font-size:13px;color:var(--text-muted);transition:transform .2s;}
+.panel.collapsed .panel-toggle{transform:rotate(-90deg);}
+.panel-body{padding:12px 14px;display:flex;flex-direction:column;gap:10px;}
+.panel.collapsed .panel-body{display:none;}

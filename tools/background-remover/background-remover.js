@@ -1,7 +1,19 @@
 /**
  * background-remover.js — Tool logic for AI Background Remover Pro
  * External deps: @imgly/background-removal (dynamic CDN import), JSZip (loaded via CDN <script> in HTML)
+ * Shared compositing/effects/photo-search/export logic lives in /assets/js/wm-studio.js (single source of truth)
  */
+
+import {
+  loadImg,
+  applyFeatherToCanvas,
+  drawOutline,
+  drawCompositeScene,
+  buildExportCanvas,
+  runPhotoSearch,
+  applyPhotoBgGeneric,
+  enhanceSliders,
+} from '/assets/js/wm-studio.js';
 
 /* ── AI MODEL LOADER ── */
 const LIB_VERSION = '1.5.5';
@@ -52,78 +64,6 @@ let glowColor = '#c8a96e', glowStrength = 60, glowBlur = 20;
 
 // Feather state
 let featherRadius = 0;
-
-/* ── FEATHER: soften edges of alpha mask ── */
-function applyFeatherToCanvas(srcCanvas, radius) {
-  if (!radius || radius <= 0) return srcCanvas;
-  const w = srcCanvas.width, h = srcCanvas.height;
-
-  // Step 1: extract alpha channel
-  const tmp = document.createElement('canvas'); tmp.width=w; tmp.height=h;
-  const tCtx = tmp.getContext('2d');
-  tCtx.drawImage(srcCanvas, 0, 0);
-  const imgData = tCtx.getImageData(0, 0, w, h);
-  const d = imgData.data;
-
-  // Step 2: build alpha-only array, then gaussian blur it
-  const alpha = new Float32Array(w * h);
-  for (let i = 0; i < w * h; i++) alpha[i] = d[i*4+3] / 255;
-
-  // Simple box blur approximation (3 passes ≈ gaussian)
-  const r = Math.round(radius);
-  const blurred = boxBlurAlpha(alpha, w, h, r);
-
-  // Step 3: write blurred alpha back into the canvas pixels
-  const out = document.createElement('canvas'); out.width=w; out.height=h;
-  const oCtx = out.getContext('2d');
-  oCtx.drawImage(srcCanvas, 0, 0);
-  const outData = oCtx.getImageData(0, 0, w, h);
-  const od = outData.data;
-  for (let i = 0; i < w * h; i++) {
-    od[i*4+3] = Math.round(blurred[i] * 255);
-  }
-  oCtx.putImageData(outData, 0, 0);
-  return out;
-}
-
-function boxBlurAlpha(alpha, w, h, r) {
-  let src = new Float32Array(alpha);
-  let dst = new Float32Array(w * h);
-  const passes = 3;
-  for (let p = 0; p < passes; p++) {
-    // Horizontal pass
-    for (let y = 0; y < h; y++) {
-      let sum = 0, count = 0;
-      for (let x = -r; x <= r; x++) {
-        const xi = Math.max(0, Math.min(w-1, x));
-        sum += src[y*w + xi]; count++;
-      }
-      for (let x = 0; x < w; x++) {
-        dst[y*w + x] = sum / count;
-        const addX = Math.min(w-1, x+r+1);
-        const remX = Math.max(0, x-r);
-        sum += src[y*w + addX] - src[y*w + remX];
-      }
-    }
-    // Vertical pass
-    const tmp2 = new Float32Array(w * h);
-    for (let x = 0; x < w; x++) {
-      let sum = 0, count = 0;
-      for (let y = -r; y <= r; y++) {
-        const yi = Math.max(0, Math.min(h-1, y));
-        sum += dst[yi*w + x]; count++;
-      }
-      for (let y = 0; y < h; y++) {
-        tmp2[y*w + x] = sum / count;
-        const addY = Math.min(h-1, y+r+1);
-        const remY = Math.max(0, y-r);
-        sum += dst[addY*w + x] - dst[remY*w + x];
-      }
-    }
-    src = tmp2;
-  }
-  return src;
-}
 
 // Subject transform (independent of canvas zoom/pan)
 let subjectScale = 1, subjectX = 0, subjectY = 0, subjectRotation = 0;
@@ -678,95 +618,35 @@ function drawComposite() {
     return;
   }
   const dw = dc.width, dh = dc.height;
-  dctx.clearRect(0, 0, dw, dh);
 
-  // 1. Background — always fills full canvas
-  if (currentPhotoBg && currentPhotoBg.img) {
-    dctx.save();
-    if (bgBlur > 0) dctx.filter = `blur(${bgBlur}px)`;
-    const imgW = currentPhotoBg.img.naturalWidth, imgH = currentPhotoBg.img.naturalHeight;
-    const scale = Math.max(dw/imgW, dh/imgH) * bgScale;
-    const sw = imgW*scale, sh = imgH*scale;
-    dctx.drawImage(currentPhotoBg.img, (dw-sw)/2 + bgOffsetX, (dh-sh)/2 + bgOffsetY, sw, sh);
-    dctx.filter = 'none';
-    dctx.restore();
-  } else if (currentBgColor !== 'transparent') {
-    dctx.save();
-    const grad = getGradient(currentBgColor, dw, dh);
-    dctx.fillStyle = grad || currentBgColor;
-    dctx.fillRect(0, 0, dw, dh);
-    dctx.restore();
-  }
-
-  // 2. Subject — drawn with its own independent transform
-  const sw = dw * subjectScale;
-  const sh = dh * subjectScale;
-  const sx = (dw - sw) / 2 + subjectX;
-  const sy = (dh - sh) / 2 + subjectY;
-  const cx = sx + sw / 2;
-  const cy = sy + sh / 2;
-  const rad = subjectRotation * Math.PI / 180;
-
-  // Glow — drawn before shadow+subject so it appears behind
-  if (glowEnabled && glowBlur > 0) {
-    const hex = glowColor;
-    const a = glowStrength / 100;
-    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-    dctx.save();
-    dctx.translate(cx, cy); dctx.rotate(rad);
-    if (flipX) dctx.scale(-1, 1);
-    if (flipY) dctx.scale(1, -1);
-    dctx.translate(-cx, -cy);
-    dctx.shadowColor = `rgba(${r},${g},${b},${a})`;
-    dctx.shadowBlur = glowBlur * 2;
-    dctx.shadowOffsetX = 0;
-    dctx.shadowOffsetY = 0;
-    const passes = Math.max(1, Math.round(glowStrength / 30));
-    for (let p = 0; p < passes; p++) {
-      dctx.drawImage(wCanvas, sx, sy, sw, sh);
-    }
-    dctx.restore();
-  }
-
-  if (shadowEnabled) {
-    const rad2 = shadowAngle * Math.PI / 180;
-    const dx = Math.cos(rad2) * shadowDistance;
-    const dy = Math.sin(rad2) * shadowDistance;
-    const hex = shadowColor;
-    const a = shadowOpacity/100;
-    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-    dctx.save();
-    dctx.translate(cx, cy); dctx.rotate(rad);
-    if (flipX) dctx.scale(-1, 1);
-    if (flipY) dctx.scale(1, -1);
-    dctx.translate(-cx, -cy);
-    dctx.shadowColor = `rgba(${r},${g},${b},${a})`;
-    dctx.shadowBlur = shadowBlur;
-    dctx.shadowOffsetX = dx;
-    dctx.shadowOffsetY = dy;
-    dctx.drawImage(wCanvas, sx, sy, sw, sh);
-    dctx.restore();
-  }
-
-  // Outline — drawn using offscreen canvas with dilate technique
-  if (outlineEnabled && outlineWidth > 0) {
-    dctx.save();
-    dctx.translate(cx, cy); dctx.rotate(rad);
-    if (flipX) dctx.scale(-1, 1);
-    if (flipY) dctx.scale(1, -1);
-    dctx.translate(-cx, -cy);
-    drawOutline(dctx, wCanvas, sx, sy, sw, sh, outlineColor, outlineWidth);
-    dctx.restore();
-  }
-
-  dctx.save();
-  dctx.translate(cx, cy); dctx.rotate(rad);
-  if (flipX) dctx.scale(-1, 1);
-  if (flipY) dctx.scale(1, -1);
-  dctx.translate(-cx, -cy);
-  const featheredSrc = featherRadius > 0 ? applyFeatherToCanvas(wCanvas, featherRadius * 0.3) : wCanvas;
-  dctx.drawImage(featheredSrc, sx, sy, sw, sh);
-  dctx.restore();
+  drawCompositeScene(dctx, wCanvas, {
+    photoBg: currentPhotoBg,
+    bgColor: currentBgColor,
+    bgBlur,
+    bgScale,
+    bgOffsetX,
+    bgOffsetY,
+    shadowEnabled,
+    shadowColor,
+    shadowOpacity,
+    shadowBlur,
+    shadowDistance,
+    shadowAngle,
+    outlineEnabled,
+    outlineColor,
+    outlineWidth,
+    glowEnabled,
+    glowColor,
+    glowStrength,
+    glowBlur,
+    featherRadius,
+    subjectScale,
+    subjectX,
+    subjectY,
+    subjectRotation,
+    flipX,
+    flipY,
+  }, dw, dh);
 
   // Save bg+subject state into active item for export
   const activeItem = items.find(i=>i.id==activeId);
@@ -802,89 +682,6 @@ function drawComposite() {
       dcHeight: dc.height
     };
   }
-}
-
-/* ── OUTLINE HELPER ── */
-function drawOutline(ctx, srcCanvas, sx, sy, sw, sh, color, width) {
-  if (!width || width <= 0) return;
-  const iw = Math.round(sw), ih = Math.round(sh);
-  if (iw <= 0 || ih <= 0) return;
-
-  // For large canvases or large widths, use fast shadow technique
-  // For preview sizes, use accurate pixel dilation
-  const pixelCount = iw * ih;
-  const useAccurate = pixelCount < 1500000 && width <= 20; // ~1.5MP threshold
-
-  if (useAccurate) {
-    // Pixel dilation: accurate edge-following outline
-    const r = parseInt(color.slice(1,3),16), g = parseInt(color.slice(3,5),16), b = parseInt(color.slice(5,7),16);
-    const maskC = document.createElement('canvas');
-    maskC.width = iw; maskC.height = ih;
-    const maskCtx = maskC.getContext('2d');
-    maskCtx.drawImage(srcCanvas, 0, 0, iw, ih);
-    const maskData = maskCtx.getImageData(0, 0, iw, ih);
-    const alpha = new Uint8Array(iw * ih);
-    for (let i = 0; i < iw * ih; i++) alpha[i] = maskData.data[i*4+3];
-
-    const outC = document.createElement('canvas');
-    outC.width = iw; outC.height = ih;
-    const outCtx = outC.getContext('2d');
-    const outImg = outCtx.createImageData(iw, ih);
-    const od = outImg.data;
-    const w = Math.ceil(width);
-
-    for (let y = 0; y < ih; y++) {
-      for (let x = 0; x < iw; x++) {
-        if (alpha[y * iw + x] > 128) continue;
-        let hit = false;
-        const x0 = Math.max(0, x-w), x1 = Math.min(iw-1, x+w);
-        const y0 = Math.max(0, y-w), y1 = Math.min(ih-1, y+w);
-        outer: for (let ny = y0; ny <= y1; ny++) {
-          for (let nx = x0; nx <= x1; nx++) {
-            if ((nx-x)*(nx-x)+(ny-y)*(ny-y) <= w*w && alpha[ny*iw+nx] > 128) { hit=true; break outer; }
-          }
-        }
-        if (hit) {
-          const idx = (y*iw+x)*4;
-          od[idx]=r; od[idx+1]=g; od[idx+2]=b; od[idx+3]=255;
-        }
-      }
-    }
-    outCtx.putImageData(outImg, 0, 0);
-    ctx.drawImage(outC, sx, sy, sw, sh);
-  } else {
-    // Shadow blur technique: fast, works for large export canvases
-    const tc = document.createElement('canvas');
-    tc.width = iw; tc.height = ih;
-    const tctx = tc.getContext('2d');
-    tctx.drawImage(srcCanvas, 0, 0, iw, ih);
-    const outC = document.createElement('canvas');
-    outC.width = iw; outC.height = ih;
-    const octx = outC.getContext('2d');
-    octx.save();
-    octx.shadowColor = color;
-    octx.shadowBlur = width * 2;
-    octx.shadowOffsetX = 0; octx.shadowOffsetY = 0;
-    for (let i = 0; i < 4; i++) octx.drawImage(tc, 0, 0);
-    octx.restore();
-    ctx.drawImage(outC, sx, sy);
-  }
-}
-
-function getGradient(color, w, h) {
-  const gradients = {
-    'gradient-purple': ['#667eea','#764ba2'],
-    'gradient-pink':   ['#f093fb','#f5576c'],
-    'gradient-blue':   ['#4facfe','#00f2fe'],
-    'gradient-green':  ['#43e97b','#38f9d7'],
-  };
-  if (gradients[color]) {
-    const g = dctx.createLinearGradient(0,0,w,h);
-    g.addColorStop(0, gradients[color][0]);
-    g.addColorStop(1, gradients[color][1]);
-    return g;
-  }
-  return null;
 }
 
 /* ── ZOOM ── */
@@ -1275,160 +1072,14 @@ window.updateEffects=function(){
   drawComposite();
 };
 
-/* ── PHOTO SEARCH (infinite scroll, shared state) ── */
-let photoSearchState = { query:'', page:1, loading:false, exhausted:false, source:'' };
-
-/* ── API KEYS ── */
-const PIXABAY_API_KEY = '56195183-28e328d32f454f70395ff87ba';
-const PEXELS_API_KEY  = 'o4lyPnNivfvjZiCGp6IfzVomd465edTzsZmJWlUMUHcvuJJoUmLVbAiC';
-
-// Fixed priority: always try Pexels first, fall back to Pixabay if Pexels
-// fails or returns no results for that page.
-const SOURCE_ORDER = ['pexels', 'pixabay'];
-
-async function fetchPhotoPage(query, page) {
-  for (const src of SOURCE_ORDER) {
-    if (src === 'pixabay') {
-      try {
-        const res = await fetch(
-          `https://pixabay.com/api/?key=${PIXABAY_API_KEY}&q=${encodeURIComponent(query)}&image_type=photo&orientation=horizontal&per_page=18&page=${page}&safesearch=true`
-        );
-        if (!res.ok) throw new Error('pixabay ' + res.status);
-        const data = await res.json();
-        const hits = data.hits || [];
-        if (!hits.length) throw new Error('empty');
-        return {
-          photos: hits.map(p => ({ thumb: p.webformatURL, full: p.largeImageURL, label: p.user })),
-          source: 'pixabay',
-          hasMore: data.totalHits > page * 18
-        };
-      } catch(e) { console.warn('Pixabay failed:', e.message); }
-    }
-
-    if (src === 'pexels') {
-      try {
-        const res = await fetch(
-          `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=18&page=${page}&orientation=landscape`,
-          { headers: { Authorization: PEXELS_API_KEY } }
-        );
-        if (!res.ok) throw new Error('pexels ' + res.status);
-        const data = await res.json();
-        const photos = data.photos || [];
-        if (!photos.length) throw new Error('empty');
-        return {
-          photos: photos.map(p => ({ thumb: p.src.small, full: p.src.large, label: p.photographer })),
-          source: 'pexels',
-          hasMore: !!data.next_page
-        };
-      } catch(e) { console.warn('Pexels failed:', e.message); }
-    }
-  }
-  return null;
-}
-
-function appendPhotosToGrid(gridEl, photos, onPick, beforeEl) {
-  photos.forEach(({thumb, full, label}) => {
-    const img = document.createElement('img');
-    img.className = 'photo-thumb';
-    img.title = label || '';
-    img.loading = 'lazy';
-    img._fullUrl = full;
-    // NOTE: no crossOrigin here on purpose. These are display-only preview
-    // thumbnails — we never read their pixels. Forcing crossOrigin='anonymous'
-    // requires the CDN to send CORS headers; Pixabay/Pexels don't always do
-    // that reliably, which made thumbnails randomly fail to show at all.
-    img.src = thumb;
-    img.onerror = () => {
-      // One silent retry with a cache-buster — covers transient CDN hiccups
-      // instead of leaving a permanently broken thumbnail.
-      if (img._retried) return;
-      img._retried = true;
-      img.src = thumb + (thumb.includes('?') ? '&' : '?') + '_r=' + Date.now();
-    };
-    img.addEventListener('click', () => {
-      if (img._picking) return; // prevent double-click spam
-      onPick(img, full);
-    });
-    // Insert before the sentinel (if present) so the sentinel stays the
-    // last child — i.e. stays at the true bottom of the scrollable list.
-    if (beforeEl && beforeEl.parentElement === gridEl) gridEl.insertBefore(img, beforeEl);
-    else gridEl.appendChild(img);
-  });
-}
-
-function setupInfiniteScroll(gridEl, onLoadMore) {
-  // #photo-grid is itself the overflow-y:auto scroll box (see CSS:
-  // max-height:360px; overflow-y:auto). The sentinel MUST live inside it
-  // to ever move/scroll — placing it as a sibling after the grid (the old
-  // code) put it completely outside the scrollable area, so it only fired
-  // once on initial layout and never again no matter how much the user
-  // scrolled inside the photo list.
-  const old = gridEl.querySelector('.photo-sentinel');
-  if (old) old.remove();
-  const sentinel = document.createElement('div');
-  sentinel.className = 'photo-sentinel';
-  sentinel.style.cssText = 'height:1px;width:100%;grid-column:1/-1;';
-  gridEl.appendChild(sentinel);
-  const obs = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) onLoadMore();
-  }, { root: gridEl, rootMargin: '150px 0px', threshold: 0 });
-  obs.observe(sentinel);
-  return { obs, sentinel };
-}
-
-let desktopPhotoObs = null;
-let _searchingDesktop = false;
-
-async function runPhotoSearch(q) {
-  if (_searchingDesktop) return;
-  _searchingDesktop = true;
-  const searchBtn = document.querySelector('.photo-search-row button');
-  if (searchBtn) { searchBtn.disabled = true; searchBtn.textContent = '…'; }
-  const grid = document.getElementById('photo-grid');
-  grid.innerHTML = '<div class="photo-loading">Searching…</div>';
-
-  if (desktopPhotoObs) { desktopPhotoObs.obs.disconnect(); desktopPhotoObs = null; }
-  photoSearchState = { query:q, page:1, loading:true, exhausted:false, source:'' };
-
-  const result = await fetchPhotoPage(q, 1);
-  _searchingDesktop = false;
-  if (searchBtn) { searchBtn.disabled = false; searchBtn.textContent = 'Search'; }
-  grid.innerHTML = '';
-  if (!result || !result.photos.length) {
-    grid.innerHTML = '<div class="photo-loading">No results found. Try a different search.</div>';
-    return;
-  }
-  appendPhotosToGrid(grid, result.photos, applyPhotoBg);
-  photoSearchState = { query:q, page:1, loading:false, exhausted:!result.hasMore, source:result.source };
-  document.querySelector('.photo-attribution').innerHTML = result.source === 'pixabay'
-    ? 'Photos via <a href="https://pixabay.com" target="_blank">Pixabay</a>'
-    : 'Photos via <a href="https://www.pexels.com" target="_blank">Pexels</a>';
-
-  if (result.hasMore) {
-    desktopPhotoObs = setupInfiniteScroll(grid, async () => {
-      if (photoSearchState.loading || photoSearchState.exhausted) return;
-      photoSearchState.loading = true;
-      const nextPage = photoSearchState.page + 1;
-      const more = await fetchPhotoPage(photoSearchState.query, nextPage);
-      if (more && more.photos.length) {
-        appendPhotosToGrid(grid, more.photos, applyPhotoBg, desktopPhotoObs.sentinel);
-        photoSearchState.page = nextPage;
-        photoSearchState.exhausted = !more.hasMore;
-      } else {
-        photoSearchState.exhausted = true;
-      }
-      photoSearchState.loading = false;
-    });
-  }
-}
-
+/* ── PHOTO SEARCH (shared engine in /assets/js/wm-studio.js) ── */
 window.searchPhotos = async function() {
   const q = document.getElementById('photo-query').value.trim();
   if (!q) {
     document.getElementById('photo-grid').innerHTML = '<div class="photo-loading">Type something and press Search.</div>';
     return;
   }
-  await runPhotoSearch(q);
+  await runPhotoSearch(q, applyPhotoBg);
 };
 
 // Pre-fill the grid with a default set of photos as soon as the tool loads,
@@ -1438,7 +1089,7 @@ window.searchPhotos = async function() {
 (function initDefaultPhotoGrid(){
   const grid = document.getElementById('photo-grid');
   if (!grid) return;
-  runPhotoSearch('gradient background');
+  runPhotoSearch('gradient background', applyPhotoBg);
 })();
 
 // Upload BG from PC
@@ -1489,34 +1140,22 @@ function showBgPhotoLoading(show) {
 }
 
 async function applyPhotoBg(el, url) {
-  if (el._picking) return; // guard against rapid clicks
-  el._picking = true;
-  document.querySelectorAll('.photo-thumb').forEach(t => { t.classList.remove('active'); t._picking = false; });
-  el.classList.add('active');
-  el.style.opacity = '0.6';
-  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-  viewport.classList.remove('checker-bg-vp');
-
-  // Instant feedback: the clicked thumbnail is already loaded in the browser,
-  // so draw it on the canvas right away (slightly soft/low-res) instead of
-  // waiting for the full-resolution image. The real image swaps in seamlessly
-  // once it's ready, with a small loading badge shown in the meantime.
-  currentPhotoBg = { url, img: el, isPlaceholder: true };
-  currentBgColor = 'transparent';
-  updateBgTransformVisibility();
-  drawComposite();
-  showBgPhotoLoading(true);
-
-  try {
-    const img = await loadImg(url);
-    currentPhotoBg = { url, img };
+  // Shared handler sets active thumbnail/swatch states + fires onApplied.
+  await applyPhotoBgGeneric(el, url, (bg) => {
+    viewport.classList.remove('checker-bg-vp');
+    currentPhotoBg = bg;
+    currentBgColor = 'transparent';
+    if (bg.isPlaceholder) {
+      showBgPhotoLoading(true);
+    } else {
+      showBgPhotoLoading(false);
+      el.style.opacity = '';
+    }
+    updateBgTransformVisibility();
     drawComposite();
-  } catch(e) {
-    console.warn('applyPhotoBg failed:', e);
-  } finally {
-    showBgPhotoLoading(false);
+  });
+  if (currentPhotoBg && !currentPhotoBg.isPlaceholder) {
     el.style.opacity = '';
-    el._picking = false;
   }
 }
 
@@ -1582,117 +1221,7 @@ window.togglePanel=function(id){document.getElementById(id).classList.toggle('co
 
 /* ── DOWNLOAD ── */
 function buildExportCanvasForItem(item) {
-  const subject = item.resultCanvas;
-  const w = subject.width, h = subject.height;
-  const exp = document.createElement('canvas'); exp.width=w; exp.height=h;
-  const ectx = exp.getContext('2d');
-  const bg = item.bgSnapshot || {};
-  const gradients = {'gradient-purple':['#667eea','#764ba2'],'gradient-pink':['#f093fb','#f5576c'],'gradient-blue':['#4facfe','#00f2fe'],'gradient-green':['#43e97b','#38f9d7']};
-
-  // Pre-compute ratio (export canvas vs display canvas)
-  const dcW0   = bg.dcWidth  || w;
-  const ratio  = w / dcW0;
-
-  // 1. Background
-  if (bg.photoBg && bg.photoBg.img) {
-    ectx.save();
-    if (bg.bgBlur > 0) ectx.filter = "blur(" + bg.bgBlur + "px)";
-    const imgW = bg.photoBg.img.naturalWidth, imgH = bg.photoBg.img.naturalHeight;
-    const bgSc = (bg.bgScale || 1);
-    const sc = Math.max(w/imgW, h/imgH) * bgSc;
-    ectx.drawImage(bg.photoBg.img, (w-imgW*sc)/2 + (bg.bgOffsetX||0)*ratio, (h-imgH*sc)/2 + (bg.bgOffsetY||0)*ratio, imgW*sc, imgH*sc);
-    ectx.filter = 'none'; ectx.restore();
-  } else if (bg.bgColor && bg.bgColor !== 'transparent') {
-    if (gradients[bg.bgColor]) {
-      const g = ectx.createLinearGradient(0,0,w,h);
-      g.addColorStop(0, gradients[bg.bgColor][0]);
-      g.addColorStop(1, gradients[bg.bgColor][1]);
-      ectx.fillStyle = g;
-    } else {
-      ectx.fillStyle = bg.bgColor;
-    }
-    ectx.fillRect(0,0,w,h);
-  }
-
-  // 2. Subject — mirror exactly what drawComposite does on dc, scaled up to full res
-  // drawComposite uses dc (dcW x dcH) with subjectScale and subjectX/Y in dc-pixels.
-  // Export canvas is (w x h). ratio = w/dcW converts dc-pixels → export-pixels.
-  const sScale = bg.subjectScale != null ? bg.subjectScale : 1;
-  const dcW    = dcW0;
-  const dcH    = bg.dcHeight || h;
-
-  const drawnW_dc  = dcW * sScale;
-  const drawnH_dc  = dcH * sScale;
-  const originX_dc = (dcW - drawnW_dc) / 2 + (bg.subjectX || 0);
-  const originY_dc = (dcH - drawnH_dc) / 2 + (bg.subjectY || 0);
-
-  const eSW = drawnW_dc  * ratio;
-  const eSH = drawnH_dc  * ratio;
-  const eSX = originX_dc * ratio;
-  const eSY = originY_dc * ratio;
-  const eCX = eSX + eSW / 2;
-  const eCY = eSY + eSH / 2;
-  const eRad = (bg.subjectRotation || 0) * Math.PI / 180;
-  const eFlipX = !!bg.flipX, eFlipY = !!bg.flipY;
-
-  // Glow export
-  if (bg.glowEnabled && bg.glowBlur > 0) {
-    const hex = bg.glowColor, a = (bg.glowStrength || 60) / 100;
-    const r = parseInt(hex.slice(1,3),16), gv = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-    ectx.save();
-    ectx.translate(eCX, eCY); ectx.rotate(eRad);
-    if (eFlipX) ectx.scale(-1, 1);
-    if (eFlipY) ectx.scale(1, -1);
-    ectx.translate(-eCX, -eCY);
-    ectx.shadowColor = "rgba(" + r + "," + gv + "," + b + "," + a + ")";
-    ectx.shadowBlur = bg.glowBlur * 2 * ratio;
-    ectx.shadowOffsetX = 0;
-    ectx.shadowOffsetY = 0;
-    const passes = Math.max(1, Math.round((bg.glowStrength||60) / 30));
-    for (let p = 0; p < passes; p++) ectx.drawImage(subject, eSX, eSY, eSW, eSH);
-    ectx.restore();
-  }
-
-  if (bg.shadowEnabled) {
-    const rad = bg.shadowAngle * Math.PI / 180;
-    const dx  = Math.cos(rad) * bg.shadowDistance * ratio;
-    const dy  = Math.sin(rad) * bg.shadowDistance * ratio;
-    const hex = bg.shadowColor, a = bg.shadowOpacity / 100;
-    const r = parseInt(hex.slice(1,3),16), gv = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-    ectx.save();
-    ectx.translate(eCX, eCY); ectx.rotate(eRad);
-    if (eFlipX) ectx.scale(-1, 1);
-    if (eFlipY) ectx.scale(1, -1);
-    ectx.translate(-eCX, -eCY);
-    ectx.shadowColor   = "rgba(" + r + "," + gv + "," + b + "," + a + ")";
-    ectx.shadowBlur    = bg.shadowBlur * ratio;
-    ectx.shadowOffsetX = dx;
-    ectx.shadowOffsetY = dy;
-    ectx.drawImage(subject, eSX, eSY, eSW, eSH);
-    ectx.restore();
-  }
-
-  // Outline export
-  if (bg.outlineEnabled && bg.outlineWidth > 0) {
-    ectx.save();
-    ectx.translate(eCX, eCY); ectx.rotate(eRad);
-    if (eFlipX) ectx.scale(-1, 1);
-    if (eFlipY) ectx.scale(1, -1);
-    ectx.translate(-eCX, -eCY);
-    drawOutline(ectx, subject, eSX, eSY, eSW, eSH, bg.outlineColor, bg.outlineWidth * ratio);
-    ectx.restore();
-  }
-
-  ectx.save();
-  ectx.translate(eCX, eCY); ectx.rotate(eRad);
-  if (eFlipX) ectx.scale(-1, 1);
-  if (eFlipY) ectx.scale(1, -1);
-  ectx.translate(-eCX, -eCY);
-  const exportFeather = bg.featherRadius || 0;
-  const featheredExport = exportFeather > 0 ? applyFeatherToCanvas(subject, exportFeather) : subject;
-  ectx.drawImage(featheredExport, eSX, eSY, eSW, eSH);
-  ectx.restore();
-  return exp;
+  return buildExportCanvas(item.resultCanvas, item.bgSnapshot || {});
 }
 
 // ── Format selector ──────────────────────────────────────────
@@ -1823,140 +1352,15 @@ window.toggleBeforeAfter = function() {
 };
 
 // ── UTIL ── */
-function loadImg(src){
-  return new Promise((res, rej) => {
-    const i = new Image();
-    i.crossOrigin = 'anonymous';
-    i.onload = () => res(i);
-    i.onerror = () => {
-      // Retry without crossOrigin (fallback for non-CORS sources)
-      const i2 = new Image();
-      i2.onload = () => res(i2);
-      i2.onerror = () => rej(new Error('Image load failed: ' + src));
-      i2.src = src + (src.includes('?') ? '&' : '?') + '_t=' + Date.now();
-    };
-    i.src = src;
-  });
-}
+// loadImg, applyFeatherToCanvas, drawOutline, buildExportCanvas, enhanceSliders,
+// runPhotoSearch, applyPhotoBgGeneric are imported from /assets/js/wm-studio.js.
 
-/* ══════════════════════════════════════════════════════════
-   SLIDER ENHANCER
-   Converts every <input type=range> + adjacent .slider-val span
-   into: [range slider] [editable number box] [↺ mini reset]
-   - Number box lets the user type an exact value; typing updates
-     the slider live and fires the slider's original handler.
-   - Mini reset restores that ONE control to its defaultValue
-     (the value/min baked into the HTML), without touching siblings.
-   - Skips any slider whose value box has already been converted,
-     so this is safe to call more than once and never double-boxes.
-   ══════════════════════════════════════════════════════════ */
-function enhanceSliders(root) {
-  root = root || document;
-  const ranges = root.querySelectorAll('input[type="range"]');
-
-  ranges.forEach(range => {
-    if (range.dataset.enhanced === '1') return; // already processed
-
-    const valId = range.id + '-val';
-    const valSpan = document.getElementById(valId);
-    if (!valSpan) return; // no companion display — leave slider alone (e.g. unlabeled sliders)
-    if (valSpan.dataset.enhanced === '1') return;
-
-    // Parse current text to detect a unit suffix (px, %, °) or none
-    const rawText = valSpan.textContent.trim();
-    const numMatch = rawText.match(/-?\d+(\.\d+)?/);
-    const unit = numMatch ? rawText.slice(numMatch.index + numMatch[0].length) : '';
-
-    // Build number input (replaces the span's job, keeps the same id so
-    // existing JS that does document.getElementById(id+'-val').textContent=
-    // still works — we intercept via a setter shim below)
-    const numInput = document.createElement('input');
-    numInput.type = 'number';
-    numInput.className = 'slider-val-input';
-    numInput.id = valId;
-    numInput.min = range.min;
-    numInput.max = range.max;
-    numInput.step = range.step || '1';
-    numInput.value = range.value;
-    numInput.dataset.enhanced = '1';
-    numInput.dataset.unit = unit;
-
-    // Unit label shown after the box (px / % / °), purely cosmetic
-    let unitSpan = null;
-    if (unit) {
-      unitSpan = document.createElement('span');
-      unitSpan.className = 'slider-val-unit';
-      unitSpan.textContent = unit;
-    }
-
-    // Mini reset button — restores ONLY this slider to its HTML default
-    const defaultVal = range.getAttribute('value') || range.defaultValue || range.min;
-    const miniReset = document.createElement('button');
-    miniReset.type = 'button';
-    miniReset.className = 'slider-mini-reset';
-    miniReset.title = 'Reset this value';
-    miniReset.innerHTML = '↺';
-    miniReset.addEventListener('click', () => {
-      range.value = defaultVal;
-      numInput.value = defaultVal;
-      range.dispatchEvent(new Event('input', { bubbles: true }));
-    });
-
-    // Swap span -> number input in the DOM, then append unit + reset after it
-    valSpan.replaceWith(numInput);
-    if (unitSpan) numInput.insertAdjacentElement('afterend', unitSpan);
-    (unitSpan || numInput).insertAdjacentElement('afterend', miniReset);
-
-    // ── Back-compat shim ──────────────────────────────────────────
-    // Lots of existing code does: document.getElementById(id+'-val').textContent = '123%'
-    // That used to set a <span>'s text. Now the element is an <input>, where
-    // .textContent is invisible (the box shows .value instead). Rather than
-    // rewriting ~90 call sites, we override .textContent on THIS element so
-    // old assignments transparently extract the number and unit and route
-    // them to .value + the unit span, keeping every existing call working.
-    Object.defineProperty(numInput, 'textContent', {
-      configurable: true,
-      get() { return numInput.value + (numInput.dataset.unit || ''); },
-      set(text) {
-        const m = String(text).match(/-?\d+(\.\d+)?/);
-        if (m) numInput.value = m[0];
-        const u = m ? String(text).slice(m.index + m[0].length) : '';
-        if (u && unitSpan) unitSpan.textContent = u;
-      }
-    });
-    // ─────────────────────────────────────────────────────────────
-
-    // Number box -> range slider (typing sets the slider + fires its handler)
-    const pushToRange = () => {
-      let v = parseFloat(numInput.value);
-      if (isNaN(v)) return;
-      const min = parseFloat(range.min), max = parseFloat(range.max);
-      if (min !== undefined && !isNaN(min)) v = Math.max(min, v);
-      if (max !== undefined && !isNaN(max)) v = Math.min(max, v);
-      numInput.value = v;
-      range.value = v;
-      range.dispatchEvent(new Event('input', { bubbles: true }));
-    };
-    numInput.addEventListener('change', pushToRange);
-    numInput.addEventListener('keydown', e => { if (e.key === 'Enter') { pushToRange(); numInput.blur(); } });
-
-    // Range slider -> number box (dragging keeps the box live in sync)
-    range.addEventListener('input', () => {
-      numInput.value = range.value;
-    });
-
-    range.dataset.enhanced = '1';
-  });
-}
-
-// Run once DOM is ready (safe even if this script runs after DOMContentLoaded already fired)
+// Run slider enhancer once DOM is ready (safe even if this script runs after
+// DOMContentLoaded already fired), then re-scan lazily when panels open.
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => enhanceSliders());
 } else {
   enhanceSliders();
 }
-
-// Re-scan when panels open, in case new sliders were
-// lazily inserted — cheap no-op for already-enhanced sliders.
 window.enhanceSliders = enhanceSliders;
 

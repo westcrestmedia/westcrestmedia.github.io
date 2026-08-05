@@ -11,7 +11,9 @@
   if (currentTool && currentTool.related) {
     otherTools = currentTool.related
       .map(slug => WC_TOOLS.find(t => t.url.includes("/" + slug + "/")))
-      .filter(Boolean);
+      .filter(Boolean)
+      .filter(t => t.url !== currentTool.url)
+      .slice(0, 4);
   } else {
     // Fallback: current tool minus karke pehle 4
     otherTools = WC_TOOLS.filter(tool =>
@@ -41,7 +43,7 @@
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-bottom:1.2rem;">
       ${grid}
     </div>
-    <a href="https://westcrestmedia.in/#tools" style="font-size:12px;color:#c8a96e;text-decoration:none;letter-spacing:.08em;font-weight:600;">View All Tools →</a>
+    <a href="https://westcrestmedia.in/tools/" style="font-size:12px;color:#c8a96e;text-decoration:none;letter-spacing:.08em;font-weight:600;">View All Tools →</a>
   `;
 
   const target = document.getElementById("explore-tools");

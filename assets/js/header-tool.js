@@ -10,6 +10,7 @@ const TOOLS = [
     { slug: 'image-compressor',   name: 'Image Compressor',       emoji: '⚡', url: '/tools/image-compressor/' },
     { slug: 'background-remover', name: 'Background Remover',     emoji: '✂️', url: '/tools/background-remover/' },
     { slug: 'image-resizer-pro',  name: 'Image Resizer Pro',      emoji: '📐', url: '/tools/image-resizer-pro/' },
+    { slug: 'photo-editor-pro',   name: 'Photo Editor Pro',       emoji: '🖌️', url: '/tools/photo-editor-pro/' },
   ]},
   { col: '🎬 Video Tools', items: [
     { slug: 'thumbnail-maker',    name: 'Thumbnail Maker',        emoji: '🎬', url: '/tools/thumbnail-maker/' },

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Tools Westcrest Media | All Browser Tools for Creators</title>
+  <meta name="description" content="Explore all free Westcrest Media tools. Image Converter, Image Compressor, Background Remover, LUT Studio, Thumbnail Maker, Color Palette, Font Pairing, PDF Studio and more. No signup, 100% free." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://westcrestmedia.in/tools/" />
+  <link rel="alternate" hreflang="en" href="https://westcrestmedia.in/tools/" />
+  <link rel="alternate" hreflang="x-default" href="https://westcrestmedia.in/tools/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://westcrestmedia.in/tools/" />
+  <meta property="og:title" content="Free Tools Westcrest Media | All Browser Tools for Creators" />
+  <meta property="og:description" content="Every free Westcrest Media tool in one place. No signup, no upload limits, completely free." />
+  <meta property="og:image" content="https://westcrestmedia.in/images/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:site_name" content="Westcrest Media" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Free Tools Westcrest Media" />
+  <meta name="twitter:description" content="Every free Westcrest Media tool in one place. No signup, no upload limits, completely free." />
+  <meta name="twitter:image" content="https://westcrestmedia.in/images/og-image.jpg" />
+  <meta name="theme-color" content="#C9A84C" />
+  <link rel="icon" type="image/svg+xml" href="/images/w_logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/nav-landing.css" />
+  <link rel="stylesheet" href="/assets/css/landing-footer.css" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #111118; --bg2: #16161e; --bg3: #1c1c26; --surface: #1e1e28;
+      --border: rgba(255,255,255,0.10);
+      --gold: #c8a96e; --gold2: #e8c98e; --gold-dim: rgba(200,169,110,0.15);
+      --white: #f5f0e8; --white-dim: rgba(245,240,232,0.55); --white-faint: rgba(245,240,232,0.12);
+      --font-display: 'Cormorant Garamond', serif;
+      --font-sans: 'Syne', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--white); font-family: var(--font-sans); overflow-x: hidden; cursor: none; }
+    body::before { content:''; position:fixed; inset:0; z-index:1; pointer-events:none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"); opacity: 0.025; }
+    #cursor { position:fixed; top:0; left:0; z-index:9999; pointer-events:none; mix-blend-mode:difference; }
+    #cursor-dot { width:8px; height:8px; border-radius:50%; background:var(--gold); position:absolute; transform:translate(-50%,-50%); transition:transform 0.1s,width 0.2s,height 0.2s; }
+    #cursor-ring { width:36px; height:36px; border-radius:50%; border:1px solid rgba(200,169,110,0.5); position:absolute; transform:translate(-50%,-50%); transition:transform 0.18s cubic-bezier(.25,.46,.45,.94),width 0.3s,height 0.3s,border-color 0.3s; }
+    ::-webkit-scrollbar { width:3px; } ::-webkit-scrollbar-track { background:var(--bg); } ::-webkit-scrollbar-thumb { background:var(--gold); border-radius:2px; }
+    .container { max-width:1260px; margin:0 auto; padding:0 60px; }
+    .padded { padding:120px 0; }
+    .section-header { margin-bottom:80px; }
+    .section-index { font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.3em; color:var(--gold); text-transform:uppercase; margin-bottom:12px; }
+    .section-title { font-family:var(--font-display); font-size:clamp(2.8rem,5vw,5rem); font-weight:300; line-height:1.05; color:var(--white); }
+    .section-title em { font-style:italic; color:var(--gold); }
+    .section-desc { margin-top:20px; max-width:560px; font-size:0.85rem; line-height:1.9; color:var(--white-dim); letter-spacing:0.03em; }
+    .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.8s ease,transform 0.8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; }
+
+    /* PAGE HERO */
+    .page-hero {
+      min-height: 34vh; display:flex; align-items:center; justify-content:center;
+      position:relative; overflow:hidden; text-align:center;
+      padding: 140px 40px 40px;
+    }
+    .page-hero-bg {
+      position:absolute; inset:0;
+      background: radial-gradient(ellipse 70% 60% at 50% 30%, rgba(200,169,110,0.07) 0%, transparent 60%),
+                  radial-gradient(ellipse 50% 50% at 80% 80%, rgba(139,32,32,0.06) 0%, transparent 50%),
+                  linear-gradient(180deg, #0a0a10 0%, var(--bg) 100%);
+    }
+    .page-hero-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px); background-size:80px 80px; mask-image:radial-gradient(ellipse at center,black 20%,transparent 70%); }
+    .page-hero-content { position:relative; z-index:2; }
+    .page-breadcrumb { font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.35em; text-transform:uppercase; color:var(--gold); margin-bottom:24px; display:flex; align-items:center; justify-content:center; gap:10px; }
+    .page-breadcrumb a { color:var(--gold); text-decoration:none; opacity:0.6; transition:opacity 0.3s; }
+    .page-breadcrumb a:hover { opacity:1; }
+    .page-breadcrumb span { opacity:0.4; }
+    .page-hero h1 { font-family:var(--font-display); font-size:clamp(3rem,7vw,6.5rem); font-weight:300; line-height:0.95; color:var(--white); margin-bottom:28px; }
+    .page-hero h1 em { font-style:italic; color:var(--gold); }
+    .page-hero p { font-size:0.85rem; letter-spacing:0.1em; color:var(--white-dim); max-width:560px; margin:0 auto; line-height:1.85; }
+
+    /* TOOLS GRID — same look as landing page */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 48px;
+    }
+    .tool-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px 20px;
+      text-decoration: none;
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold-dim);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .tool-card:hover { border-color: rgba(200,169,110,0.4); transform: translateY(-3px); }
+    .tool-card:hover::before { opacity: 1; }
+    .tool-card-icon { font-size: 1.6rem; }
+    .tool-card-name { font-size: 0.82rem; font-weight: 600; letter-spacing: 0.05em; }
+    .tool-card-desc { font-size: 0.72rem; color: var(--white-dim); line-height: 1.5; }
+    .tool-card-tag {
+      display: inline-block;
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-family: 'DM Mono', monospace;
+      color: var(--gold);
+      border: 1px solid rgba(200,169,110,0.4);
+      padding: 3px 8px;
+      border-radius: 2px;
+      margin-top: auto;
+      align-self: flex-start;
+    }
+    .tool-card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: auto;
+      font-family: var(--font-mono);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .tool-card:hover .tool-card-cta { opacity: 1; transform: translateY(0); }
+    .tool-card-cta::after { content: '→'; }
+
+    /* CTA BANNER */
+    .cta-banner { text-align:center; padding:100px 0; background:var(--bg2); }
+    .cta-banner h2 { font-family:var(--font-display); font-size:clamp(2.5rem,5vw,4.5rem); font-weight:300; margin-bottom:24px; }
+    .cta-banner h2 em { font-style:italic; color:var(--gold); }
+    .cta-banner p { font-size:0.82rem; color:var(--white-dim); letter-spacing:0.08em; margin-bottom:48px; }
+    .btn-row { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+    .btn-primary { display:inline-block; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; background:var(--gold); color:#0a0a12; padding:16px 36px; text-decoration:none; font-family:var(--font-sans); font-weight:600; transition:background 0.3s,transform 0.2s; }
+    .btn-primary:hover { background:var(--gold2); transform:translateY(-2px); }
+    .btn-ghost { display:inline-block; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; background:transparent; color:var(--gold); border:1px solid var(--gold); padding:15px 36px; text-decoration:none; font-family:var(--font-sans); transition:background 0.3s,color 0.3s,transform 0.2s; }
+    .btn-ghost:hover { background:var(--gold); color:#0a0a12; transform:translateY(-2px); }
+
+    @media(max-width:900px) { .container { padding:0 30px; } .padded { padding:80px 0; } .page-hero { padding: 110px 24px 32px; } }
+    @media(max-width:600px) { .container { padding:0 20px; } .padded { padding:60px 0; } .section-header { margin-bottom:40px; } .tools-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; } .tool-card { padding: 18px 14px; } }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR -->
+  <div id="cursor"><div id="cursor-dot"></div><div id="cursor-ring"></div></div>
+
+  <!-- HEADER (landing header + working mobile menu) -->
+  <nav id="navbar"></nav>
+  <script type="module" src="/assets/js/header-landing.js"></script>
+
+  <main>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+      <div class="page-hero-bg"></div>
+      <div class="page-hero-grid"></div>
+      <div class="page-hero-content reveal">
+        <div class="page-breadcrumb">
+          <a href="/">Home</a>
+          <span>/</span>
+          Free Tools
+        </div>
+        <h1>Free Creative <em>Tools</em></h1>
+        <p>Browser based tools for video editors, designers &amp; content creators. No signup, no upload limits, completely free.</p>
+      </div>
+    </section>
+
+    <!-- TOOLS GRID -->
+    <section class="padded" style="background:var(--bg2);">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="section-index">All Tools</div>
+          <h2 class="section-title">Every Tool in <em>One Place</em></h2>
+          <p class="section-desc">Built by a creator, for creators. Pick a tool and start creating — nothing to install, nothing to pay.</p>
+        </div>
+
+        <div class="tools-grid reveal">
+
+          <a href="/tools/image-converter/" class="tool-card">
+            <div class="tool-card-icon">🖼️</div>
+            <div class="tool-card-name">Image Converter</div>
+            <div class="tool-card-desc">Convert JPG, PNG, WEBP, HEIC, BMP &amp; more to any format. Batch support.</div>
+            <span class="tool-card-tag">Live ✦</span>
+            <span class="tool-card-cta">Try it Free </span>
+          </a>
+
+          <a href="/tools/image-compressor/" class="tool-card">
+            <div class="tool-card-icon">⚡</div>
+            <div class="tool-card-name">Image Compressor</div>
+            <div class="tool-card-desc">Compress any image JPG, PNG, WEBP, AVIF &amp; more. Choose output format. Up to 80% smaller.</div>
+            <span class="tool-card-tag">Live ✦</span>
+            <span class="tool-card-cta">Try it Free </span>
+          </a>
+
+          <a href="/tools/image-resizer-pro/" class="tool-card">
+            <div class="tool-card-icon">↔️</div>
+            <div class="tool-card-name">Image Resizer Pro</div>
+            <div class="tool-card-desc">Resize to any dimension custom px, 50+ presets, aspect ratio lock, batch mode &amp; DPI control.</div>
+            <span class="tool-card-tag">Live ✦</span>
+            <span class="tool-card-cta">Try it Free </span>
+          </a>
+
+          <a href="/tools/background-remover/" class="tool-card">
+            <div class="tool-card-icon">✂️</div>
+            <div class="tool-card-name">Background Remover</div>
+            <div class="tool-card-desc">Remove image backgrounds instantly with AI. No green screen needed.</div>
+            <span class="tool-card-tag">Live ✦</span>
+            <span class="tool-card-cta">Try it Free </span>
+          </a>
+
+          <a href="/tools/color-palette/" class="tool-card">
+            <div class="tool-card-icon">🎨</div>
+            <div class="tool-card-name">Color Palette Generator</div>
+            <div class="tool-card-desc">Extract beautiful palettes from any image or generate from scratch.</div>
+            <span class="tool-card-tag">Live ✦</span>
+            <span class="tool-card-cta">Try it Free </span>
+          </a>
+
+          <a href="/tools/thumbnail-maker/" class="tool-card">
+            <div class="tool-card-icon">🎬</div>
+            <div class="tool-card-name">Video Thumbnail Maker</div>
+            <div class="tool-card-desc">Create eye catching YouTube &amp; social media thumbnails in seconds.</div>
+            <span class="tool-card-tag">Live ✦</span>
+            <span class="tool-card-cta">Try it Free </span>
+          </a>
+
+          <a href="/tools/lut-preview/" class="tool-card">
+            <div class="tool-card-icon">🎞️</div>
+            <div class="tool-card-name">LUT Studio</div>
+            <div class="tool-card-desc">Preview .cube LUT files on your footage before buying or applying.</div>
+            <span class="tool-card-tag">Live ✦</span>
+            <span class="tool-card-cta">Try it Free </span>
+          </a>
+
+          <a href="/tools/aspect-ratio/" class="tool-card">
+            <div class="tool-card-icon">📐</div>
+            <div class="tool-card-name">Aspect Ratio Calculator</div>
+            <div class="tool-card-desc">Calculate perfect dimensions for any platform YouTube, Instagram, TikTok.</div>
+            <span class="tool-card-tag">Live ✦</span>
+            <span class="tool-card-cta">Try it Free </span>
+          </a>
+
+          <a href="/tools/image-prompt/" class="tool-card">
+            <div class="tool-card-icon">&#127924;</div>
+            <div class="tool-card-name">Image Prompt Generator</div>
+            <div class="tool-card-desc">Generate detailed AI image prompts for Midjourney, DALL·E &amp; more.</div>
+            <span class="tool-card-tag">Live ✦</span>
+            <span class="tool-card-cta">Try it Free </span>
+          </a>
+
+          <a href="/tools/video-prompt/" class="tool-card">
+            <div class="tool-card-icon">🎥</div>
+            <div class="tool-card-name">Video Prompt Generator</div>
+            <div class="tool-card-desc">Craft cinematic AI video prompts for Sora, Runway &amp; Kling.</div>
+            <span class="tool-card-tag">Live ✦</span>
+            <span class="tool-card-cta">Try it Free </span>
+          </a>
+
+          <a href="/tools/font-pairing/" class="tool-card">
+            <div class="tool-card-icon">🔤</div>
+            <div class="tool-card-name">Font Pairing Tool</div>
+            <div class="tool-card-desc">Find perfect font combinations for your brand or video projects.</div>
+            <span class="tool-card-tag">Live ✦</span>
+            <span class="tool-card-cta">Try it Free </span>
+          </a>
+
+          <a href="/tools/pdf-studio/" class="tool-card">
+            <div class="tool-card-icon">📑</div>
+            <div class="tool-card-name">PDF Studio</div>
+            <div class="tool-card-desc">Merge, split, compress, watermark, protect &amp; convert PDFs 12 tools in one suite.</div>
+            <span class="tool-card-tag">Live ✦</span>
+            <span class="tool-card-cta">Try it Free </span>
+          </a>
+
+          <a href="/tools/photo-editor-pro/" class="tool-card">
+            <div class="tool-card-icon">🖌️</div>
+            <div class="tool-card-name">Photo Editor Pro</div>
+            <div class="tool-card-desc">Adjust brightness, contrast, filters, rotate &amp; crop photos right in your browser. No upload.</div>
+            <span class="tool-card-tag">Live ✦</span>
+            <span class="tool-card-cta">Try it Free </span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-banner">
+      <div class="container">
+        <div class="reveal">
+          <h2>Need Something <em>More?</em></h2>
+          <p>Professional video editing &amp; motion graphics, or browse our plugins and LUT packs.</p>
+          <div class="btn-row">
+            <a href="/#contact" class="btn-primary">Start a Project</a>
+            <a href="/shop/" class="btn-ghost">Browse the Shop</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <div id="landing-footer"></div>
+  <script src="/assets/js/landing-footer.js"></script>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+    (function animRing(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animRing); })();
+    document.querySelectorAll('a,button').forEach(el => { el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover')); el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover')); });
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

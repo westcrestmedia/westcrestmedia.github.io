@@ -85,9 +85,9 @@ const WC_TOOLS = [
   },
   {
     name: "Photo Editor Pro",
-    desc: "Edit, retouch and enhance your photos with professional tools.",
+    desc: "Adjust, filter and transform photos right in your browser.",
     icon: "🖌️",
     url: "https://westcrestmedia.in/tools/photo-editor-pro/",
-    related: ["background-remover", "image-converter", "image-compressor", "thumbnail-maker"]
+    related: ["background-remover", "image-converter", "color-palette", "thumbnail-maker"]
   },
 ];

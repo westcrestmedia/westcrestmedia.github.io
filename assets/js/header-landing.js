@@ -15,7 +15,7 @@ function renderNav(user) {
     </a>
 
     <ul class="nav-links">
-      <li class="nav-dropdown"><a href="#tools">Tools</a>
+      <li class="nav-dropdown"><a href="/tools/">Tools</a>
         <div class="dropdown-menu">
           <div class="dropdown-menu-grid">
             <div>
@@ -24,6 +24,7 @@ function renderNav(user) {
               <a href="/tools/image-compressor/"><span class="drop-icon-sm">⚡</span>Image Compressor</a>
               <a href="/tools/background-remover/"><span class="drop-icon-sm">✂️</span>Background Remover</a>
               <a href="/tools/image-resizer-pro/"><span class="drop-icon-sm">📐</span>Image Resizer Pro</a>
+              <a href="/tools/photo-editor-pro/"><span class="drop-icon-sm">🖌️</span>Photo Editor Pro</a>
             </div>
             <div>
               <div class="dropdown-label">🎬 Video Tools</div>
@@ -45,10 +46,9 @@ function renderNav(user) {
       <li><a href="/services/">Services</a></li>
       <li><a href="/portfolio/">Portfolio</a></li>
       <li><a href="/shop/">Shop</a></li>
-      <li><a href="#process">Process</a></li>
       <li><a href="/about/">About</a></li>
       <li><a href="/blog/">Blog</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="/#contact">Contact</a></li>
     </ul>
 
     <div class="nav-right">
@@ -153,6 +153,41 @@ function initActiveNav() {
   })
 }
 
+function initMobileMenu() {
+  // Only inject the mobile menu when the page doesn't already ship one
+  // (index.html defines its own markup + handlers).
+  if (!document.getElementById('mobileMenu')) {
+    const menu = document.createElement('div')
+    menu.className = 'mobile-menu'
+    menu.id = 'mobileMenu'
+    menu.innerHTML = `
+      <button class="mobile-close-btn" aria-label="Close navigation menu" onclick="closeMobile()">✕</button>
+      <a href="/tools/" onclick="closeMobile()">Tools</a>
+      <a href="/services/" onclick="closeMobile()">Services</a>
+      <a href="/portfolio/" onclick="closeMobile()">Portfolio</a>
+      <a href="/shop/" onclick="closeMobile()">Shop</a>
+      <a href="/about/" onclick="closeMobile()">About</a>
+      <a href="/blog/" onclick="closeMobile()">Blog</a>
+      <a href="/#contact" onclick="closeMobile()">Contact</a>
+    `
+    document.body.appendChild(menu)
+  }
+
+  // Provide the toggle helpers when the page doesn't define its own.
+  if (typeof window.toggleMobile !== 'function') {
+    window.toggleMobile = function () {
+      document.getElementById('mobileMenu')?.classList.toggle('open')
+      document.getElementById('hamburger')?.classList.toggle('open')
+    }
+  }
+  if (typeof window.closeMobile !== 'function') {
+    window.closeMobile = function () {
+      document.getElementById('mobileMenu')?.classList.remove('open')
+      document.getElementById('hamburger')?.classList.remove('open')
+    }
+  }
+}
+
 function initScroll() {
   const nav = document.getElementById('navbar')
   if (!nav) return
@@ -162,6 +197,7 @@ function initScroll() {
 }
 
 async function init() {
+  initMobileMenu()
   const { data: { session } } = await supabase.auth.getSession()
   renderNav(session?.user ?? null)
   initScroll()
