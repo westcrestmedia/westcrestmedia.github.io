@@ -186,6 +186,7 @@ window.AudioConverter = (() => {
     worker: null,
     workerError: '',         // non-empty when the last worker attempt failed
     enginePhase: '',         // 'core' | 'wasm' | 'start' | 'ready' while loading
+    engineFailMsg: '',       // concrete engine startup error (if any)
     busy: false,             // a conversion job is in flight
     zipName: 'audio-converted.zip',
   };
@@ -316,6 +317,10 @@ window.AudioConverter = (() => {
         processQueue();
         break;
       }
+      case 'engine-fail':
+        state.engineFailMsg = msg.message || 'Engine failed to start.';
+        failEngineLoad(state.engineFailMsg);
+        break;
       case 'error': {
         if (msg.id != null) {
           const f = findFile(msg.id);
@@ -335,7 +340,8 @@ window.AudioConverter = (() => {
             engineWaiters = [];
             ws.forEach((w) => w.reject(new Error(msg.message || 'Engine load failed')));
           }
-          setStatusHint('Could not load the conversion engine. Check your connection and try again.');
+          setStatusHint(state.engineFailMsg || 'Could not load the conversion engine. Check your connection and try again.');
+          state.engineFailMsg = '';
         }
         processQueue();
         break;
@@ -354,6 +360,7 @@ window.AudioConverter = (() => {
       state.engineLoading = true;
       engineWaiters.push({ resolve, reject });
       state.enginePhase = 'core';
+      state.engineFailMsg = '';
       showEngineOverlay();
       const w = ensureWorker();
       w.postMessage({ type: 'load' });

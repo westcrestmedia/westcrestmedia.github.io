@@ -88,6 +88,27 @@ async function fetchCoreFile(fileName, expectedSize, onProgress) {
   throw new Error('Could not download ' + fileName + ' from any mirror. ' + errors.join(' | '));
 }
 
+/** Picks the first core base dir that actually serves ffmpeg-core.js, so we can
+ *  hand the library a REAL url (not a blob). This matters: the library derives
+ *  wasmURL/workerURL from coreURL via `.replace(/.js$/, ...)` and a blob url
+ *  never matches — which makes engine startup hang ("too long to start"). */
+async function resolveCoreBase() {
+  const errors = [];
+  for (const base of CORE_DIRS) {
+    try {
+      const res = await fetch(base + '/ffmpeg-core.js');
+      if (res.ok) {
+        if (res.body && res.body.cancel) { try { res.body.cancel(); } catch (e) { /* ignore */ } }
+        return base;
+      }
+      errors.push(base.replace(/^https?:\/\//, '') + ' HTTP ' + res.status);
+    } catch (e) {
+      errors.push(base.replace(/^https?:\/\//, '') + ' (' + String((e && e.message) || e) + ')');
+    }
+  }
+  throw new Error('No FFmpeg core source available. ' + errors.join(' | '));
+}
+
 async function loadEngine() {
   if (ffmpeg) return;
   if (!FFmpeg) await loadLibrary();
@@ -101,20 +122,26 @@ async function loadEngine() {
     if (currentId) post('progress', { id: currentId, progress: progress || 0, time: time || 0 });
   });
 
-  // Live progress through the multi-MB engine download (core ~33MB + wasm ~31MB),
-  // with the phase surfaced to the UI so a stall is never a mystery.
+  // coreURL MUST be a real URL (/assets/ffmpeg/... or a CDN path), never a blob.
   post('load-progress', { pct: 2, phase: 'core' });
-  const coreBlob = await fetchCoreFile('ffmpeg-core.js', 34000000, (p) => {
-    post('load-progress', { pct: Math.round(2 + p * 43), phase: 'core' });
-  });
-  const coreURL = URL.createObjectURL(new Blob([coreBlob], { type: 'text/javascript' }));
+  const coreBase = await resolveCoreBase();
+  const coreURL = coreBase + '/ffmpeg-core.js';
+  post('load-progress', { pct: 30, phase: 'core' });
+
+  // The wasm we fetch ourselves (streaming progress) and hand over explicitly.
   post('load-progress', { pct: 48, phase: 'wasm' });
-  const wasmBlob = await fetchCoreFile('ffmpeg-core.wasm', 31000000, (p) => {
+  const wasmBlob = await fetchCoreFile('ffmpeg-core.wasm', 32000000, (p) => {
     post('load-progress', { pct: Math.round(48 + p * 44), phase: 'wasm' });
   });
   const wasmURL = URL.createObjectURL(new Blob([wasmBlob], { type: 'application/wasm' }));
+
   post('load-progress', { pct: 97, phase: 'start' });
-  await ffmpeg.load({ coreURL, wasmURL });
+  try {
+    await ffmpeg.load({ coreURL, wasmURL });
+  } catch (err) {
+    post('engine-fail', { message: String((err && err.message) || err) });
+    throw err;
+  }
   post('load-progress', { pct: 100, phase: 'ready' });
 }
 
