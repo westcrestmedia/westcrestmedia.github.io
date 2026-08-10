@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Audio Converter — MP3 WAV FLAC OGG M4A &amp; More | Westcrest Media</title>
+<meta name="description" content="Free online audio converter. Convert MP3, WAV, FLAC, OGG, OPUS, M4A, AAC, AIFF, WMA and more. Batch conversion, lossless quality, 100% browser-side. No upload required.">
+<meta name="robots" content="index, follow">
+<link rel="icon" type="image/svg+xml" href="../../images/w_logo.svg">
+<link rel="canonical" href="https://westcrestmedia.in/tools/audio-converter/">
+<link rel="alternate" hreflang="en" href="https://westcrestmedia.in/tools/audio-converter/">
+<link rel="alternate" hreflang="x-default" href="https://westcrestmedia.in/tools/audio-converter/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://westcrestmedia.in/tools/audio-converter/">
+<meta property="og:title" content="Audio Converter | Free Online Tool | Westcrest Media">
+<meta property="og:description" content="Free online audio converter. Convert MP3, WAV, FLAC, OGG, OPUS, M4A, AIFF, WMA and more. 100% browser-side.">
+<meta property="og:image" content="https://westcrestmedia.in/images/og-image.jpg">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="en_CA">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Audio Converter | Westcrest Media">
+<meta name="twitter:description" content="Free online audio converter. Convert any audio format instantly in your browser.">
+<meta name="twitter:image" content="https://westcrestmedia.in/images/og-image.jpg">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" />
+<link rel="stylesheet" href="/assets/css/global.css" />
+<link rel="stylesheet" href="/assets/css/nav.css" />
+<link rel="stylesheet" href="/assets/css/footer.css" />
+<link rel="stylesheet" href="/assets/css/tools-common.css" />
+<link rel="stylesheet" href="/assets/css/wm-studio.css" />
+<link rel="stylesheet" href="audio-converter.css" />
+</head>
+<body>
+<div id="tool-nav"></div>
+
+<div class="tool-hero">
+  <div class="tool-hero__badge">Free • No Signup • 100% Browser</div>
+  <h1>Audio <em>Converter</em></h1>
+  <p class="tool-hero__desc">Convert MP3, WAV, FLAC, OGG, OPUS, M4A, AAC, AIFF, WMA and more — right in your browser. No upload. No watermark. No limits.</p>
+</div>
+
+<main class="tool-main wrap">
+
+  <section class="convert-box">
+    <div class="convert-box__head">
+      <span class="convert-box__title">Drop your audio</span>
+      <span class="convert-box__head-note">Max 20 files • 100MB each</span>
+    </div>
+
+    <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-label="Upload audio files">
+      <div class="drop-zone__inner">
+        <div class="drop-zone__icon">🎵</div>
+        <p class="drop-zone__title">Drag &amp; drop audio files here</p>
+        <p class="drop-zone__hint">or click to browse • MP3 WAV FLAC OGG OPUS M4A AAC AIFF WMA &amp; more</p>
+      </div>
+      <input type="file" id="file-input" multiple hidden
+        accept="audio/*,.mp3,.wav,.flac,.aac,.m4a,.m4b,.m4r,.alac,.ogg,.oga,.opus,.wma,.wv,.ape,.ac3,.eac3,.dts,.amr,.aiff,.aif,.aifc,.caf,.mka,.gsm,.mp2,.mp1,.3gp,.3g2,.webm,.ra,.rm,.tak,.tta,.shn,.w64,.voc,.spx,.au" />
+    </div>
+
+    <div class="settings-panel">
+      <div class="settings-panel__section">
+        <div class="settings-panel__label">Output Format</div>
+        <div id="format-grid" class="format-grid" role="radiogroup" aria-label="Output format"></div>
+        <p id="format-capability" class="settings-panel__hint"></p>
+      </div>
+
+      <div class="settings-panel__section">
+        <div class="settings-panel__label">Quality</div>
+        <div id="quality-presets" class="quality-presets" role="radiogroup" aria-label="Quality preset"></div>
+        <p id="quality-hint" class="settings-panel__hint"></p>
+      </div>
+
+      <details class="advanced-panel" id="advanced-panel">
+        <summary class="advanced-panel__summary">Advanced settings</summary>
+        <div class="advanced-panel__grid">
+          <label class="ac-field">
+            <span class="ac-field__label">Sample rate</span>
+            <select id="sample-rate">
+              <option value="0">Auto (keep original)</option>
+              <option value="44100">44.1 kHz</option>
+              <option value="48000">48 kHz</option>
+              <option value="96000">96 kHz</option>
+              <option value="192000">192 kHz</option>
+            </select>
+          </label>
+          <label class="ac-field">
+            <span class="ac-field__label">Channels</span>
+            <select id="channels">
+              <option value="0">Auto (keep original)</option>
+              <option value="1">Mono</option>
+              <option value="2">Stereo</option>
+            </select>
+          </label>
+        </div>
+        <div class="advanced-panel__toggles">
+          <label class="ac-toggle">
+            <input type="checkbox" id="keep-metadata" checked>
+            <span class="ac-toggle__ui"></span>
+            <span class="ac-toggle__label">Keep metadata (title, artist, album)</span>
+          </label>
+          <label class="ac-toggle">
+            <input type="checkbox" id="normalize-volume">
+            <span class="ac-toggle__ui"></span>
+            <span class="ac-toggle__label">Normalize volume (EBU R128)</span>
+          </label>
+        </div>
+      </details>
+    </div>
+
+    <div id="file-list" class="file-list" aria-live="polite"></div>
+    <div id="empty-state" class="file-list__empty">
+      <p>No files yet. Add up to 20 audio files and they will appear here.</p>
+    </div>
+
+    <div class="action-bar">
+      <span id="status-hint" class="status-hint" role="status"></span>
+      <button id="convert-all" class="btn btn--primary" disabled>Convert All</button>
+      <button id="download-all" class="btn" disabled>Download All (.zip)</button>
+      <button id="clear-all" class="btn btn--ghost">Clear All</button>
+    </div>
+  </section>
+
+  <div class="pro-tip">
+    <span class="pro-tip__icon">💡</span>
+    <div class="pro-tip__body">
+      <strong>Pro tip:</strong> Everything stays in your browser — your audio is never uploaded. Convert FLAC or WAV to MP3 for smaller files, or choose OPUS/OGG for the best quality-to-size ratio. The FFmpeg engine (~31MB) is loaded from this site, instantly on the first conversion, and then cached in memory for the rest of your session.
+    </div>
+  </div>
+
+  <section class="tool-section">
+    <p class="section-eyebrow">How it works</p>
+    <h2 class="section-title">Three simple <em>steps</em></h2>
+    <div class="steps-grid">
+      <div class="step-card">
+        <span class="step-num">Step 01</span>
+        <h4>Add audio</h4>
+        <p>Drag &amp; drop or browse up to 20 files — MP3, WAV, FLAC, OGG, M4A and more.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">Step 02</span>
+        <h4>Pick format</h4>
+        <p>Choose from 14 reliable output formats and a quality preset that fits your need.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">Step 03</span>
+        <h4>Download</h4>
+        <p>Converted files are ready right away. Download one by one, or grab the whole batch as a ZIP.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section">
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Are my audio files uploaded to a server? <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="faq-a">No. Everything runs locally in your browser using the FFmpeg WebAssembly engine. Your audio never leaves your device — it is decoded, converted and encoded entirely on your machine.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">How many files can I convert at once? <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="faq-a">Up to 20 files, each up to 100MB. They convert one by one in a queue — download each result individually or grab the whole batch as a ZIP.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What input formats are supported? <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="faq-a">MP3, WAV, FLAC, AAC, M4A/M4B, ALAC, OGG/OGV, OPUS, WMA, WV, APE, AC3, DTS, AMR, AIFF/AIFC, CAF, MKA, GSM, WEBM, 3GP, TAK, TTA, SHN, W64, VOC, SPX, AU, MPC and more — around 39 formats in total.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What output formats are available? <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="faq-a">Fourteen reliable formats: MP3, AAC, M4A, ALAC, Opus, OGG Vorbis, FLAC, WAV, AIFF, MKA, WMA, AC3, AMR-NB and TTA. Lossless formats like FLAC, ALAC and WAV preserve full quality.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Why does the first conversion download ~33MB? <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="faq-a">The FFmpeg WebAssembly engine (~33MB) is fetched once so conversions can run 100% offline and private in your browser. After the first load your browser caches it in memory for the whole session.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Does it work on mobile? <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+      <div class="faq-a">Yes, the tool is fully responsive. On phones you can pick audio from your files or music app — either by tapping the drop zone or dragging files in.</div>
+    </div>
+  </section>
+
+  <div id="wm-reviews-root"></div>
+  <div id="explore-tools"></div>
+</main>
+
+<!-- Engine download overlay -->
+<div id="engine-overlay" class="engine-overlay" hidden>
+  <div class="engine-overlay__card">
+    <div class="engine-overlay__spinner" role="status" aria-label="Loading"></div>
+    <p class="engine-overlay__title">Loading conversion engine…</p>
+    <p class="engine-overlay__sub" id="engine-overlay__sub">Loading the FFmpeg WebAssembly engine (~31MB, local &amp; fast). This happens on the first conversion and is cached in memory for the rest of your session.</p>
+    <div class="engine-overlay__bar"><div id="engine-overlay__bar-inner" class="engine-overlay__bar-inner"></div></div>
+    <p class="engine-overlay__pct" id="engine-overlay__pct">0%</p>
+  </div>
+</div>
+
+<script>
+  window.__WM_TOOL__ = {
+    slug: 'audio-converter',
+    name: 'Audio Converter',
+    emoji: '🎵',
+    url: '/tools/audio-converter/',
+    title: 'Audio Converter',
+    onReady: () => {
+      if (window.AudioConverter) window.AudioConverter.init();
+    }
+  };
+</script>
+<script src="/assets/js/head-inject.js"></script>
+<script src="/assets/js/tool-connect.js"></script>
+<script type="module" src="audio-converter.js"></script>
+</body>
+</html>

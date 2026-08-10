@@ -1,0 +1,34 @@
+# dependencies
+/node_modules
+
+# build output
+/.next
+/out
+
+# deployment platform
+.vercel
+
+# misc
+.DS_Store
+*.pem
+*.key
+
+# debug
+npm-debug.log*
+*.log
+
+# SECRET FILES — kabhi commit nahi karo.
+# admin/.env.local me SUPABASE_SERVICE_ROLE_KEY hai (server-side secret).
+# Agar ye commit ho gaya to koi bhi user RLS bypass karke data padh sakta hai.
+.env
+.env.local
+.env*.local
+.env*.production
+.env*.staging
+# .env.example safe hai (placeholder values) — ise commit karo taaki template mile.
+!.env.example
+
+# eslint / typescript
+.eslintcache
+*.tsbuildinfo
+next-env.d.ts

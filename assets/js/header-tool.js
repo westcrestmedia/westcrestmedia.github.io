@@ -18,6 +18,9 @@ const TOOLS = [
     { slug: 'aspect-ratio',       name: 'Aspect Ratio Calc',      emoji: '📐', url: '/tools/aspect-ratio/' },
     { slug: 'color-palette',      name: 'Color Palette',          emoji: '🎨', url: '/tools/color-palette/' },
   ]},
+  { col: '🎵 Audio Tools', items: [
+    { slug: 'audio-converter',    name: 'Audio Converter',        emoji: '🎵', url: '/tools/audio-converter/' },
+  ]},
   { col: '✨ AI & Other', items: [
     { slug: 'image-prompt',       name: 'Image Prompts',          emoji: '🎴', url: '/tools/image-prompt/' },
     { slug: 'video-prompt',       name: 'Video Prompts',          emoji: '🎥', url: '/tools/video-prompt/' },

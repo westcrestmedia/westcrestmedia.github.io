@@ -1,0 +1,73 @@
+# ─── Westcrest Media — root .gitignore ──────────────────────────────
+# Applies to the whole repo (static site + admin panel).
+
+# ── OS junk ──
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# ── Editor / IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Logs & debug artifacts ──
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ── ENVIRONMENT / SECRET FILES ──────────────────────────────────────
+# SECURITY CRITICAL. Ye kabhi push nahi hone chahiye:
+# admin/.env.local me real SUPABASE_SERVICE_ROLE_KEY hoti hai —
+# wo server-side secret hai, agar commit ho gaya to koi bhi RLS bypass
+# kar sakta hai. Inhe hamesha gitignore me rakho.
+.env
+.env.local
+.env*.local
+.env*.production
+.env*.staging
+*.env
+!.env.example
+
+# service/credential files jo kabhi nahi chahiye repo me
+*.pem
+*.key
+*.p12
+*.pfx
+service-account*.json
+credentials.json
+
+# ── Database dumps (backups push mat karo; schema.sql migrations theek hain) ──
+*.sql.bak
+*.sql.gz
+*.sql.zip
+*.db.bak
+*.dump
+
+# ── Supabase CLI/workflow local state ──
+supabase/.temp/
+supabase/.env
+supabase/functions/**/.env
+supabase/functions/**/.env.local
+
+# ── Admin panel (Next.js) build & deps — admin/ ke apne .gitignore se bhi
+#    cover hota hai, safety net ke liye dohraya gaya hai ──
+node_modules/
+admin/node_modules/
+admin/.next/
+admin/out/
+admin/.vercel/
+admin/*.tsbuildinfo
+admin/.eslintcache
+
+# ── TypeScript build info (repo wide) ──
+*.tsbuildinfo
+
+# ── Optional: FFmpeg engine binary (~31MB) ko repo me push karna ho to
+#    is line ko comment kar do (files self-hosted tool ke liye zaroori hain):
+# assets/ffmpeg/

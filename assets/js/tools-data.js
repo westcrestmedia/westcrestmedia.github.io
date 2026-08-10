@@ -32,7 +32,7 @@ const WC_TOOLS = [
     desc: "Compress images without quality loss.",
     icon: "⚡",
     url: "https://westcrestmedia.in/tools/image-compressor/",
-    related: ["image-converter", "image-resizer-pro", "background-remover", "aspect-ratio"]
+    related: ["image-converter", "image-resizer-pro", "background-remover", "audio-converter"]
   },
   {
     name: "Image Converter",
@@ -53,21 +53,21 @@ const WC_TOOLS = [
     desc: "Preview, customize and export professional LUTs online.",
     icon: "🎞️",
     url: "https://westcrestmedia.in/tools/lut-preview/",
-    related: ["video-prompt", "thumbnail-maker", "color-palette", "aspect-ratio"]
+    related: ["video-prompt", "thumbnail-maker", "audio-converter", "aspect-ratio"]
   },
   {
     name: "Video Thumbnail Maker",
     desc: "Create eye-catching YouTube & social media thumbnails.",
     icon: "🎬",
     url: "https://westcrestmedia.in/tools/thumbnail-maker/",
-    related: ["color-palette", "font-pairing", "image-resizer-pro", "lut-preview"]
+    related: ["color-palette", "font-pairing", "video-prompt", "audio-converter"]
   },
   {
     name: "Video Prompt Generator",
     desc: "Generate creative video prompts for any style.",
     icon: "🎥",
     url: "https://westcrestmedia.in/tools/video-prompt/",
-    related: ["image-prompt", "lut-preview", "thumbnail-maker", "color-palette"]
+    related: ["image-prompt", "lut-preview", "audio-converter", "color-palette"]
   },
   {
     name: "Image Resizer Pro",
@@ -89,5 +89,12 @@ const WC_TOOLS = [
     icon: "🖌️",
     url: "https://westcrestmedia.in/tools/photo-editor-pro/",
     related: ["background-remover", "image-converter", "color-palette", "thumbnail-maker"]
+  },
+  {
+    name: "Audio Converter",
+    desc: "Convert MP3, WAV, FLAC, OGG & more in your browser.",
+    icon: "🎵",
+    url: "https://westcrestmedia.in/tools/audio-converter/",
+    related: ["thumbnail-maker", "video-prompt", "lut-preview", "image-compressor"]
   },
 ];
